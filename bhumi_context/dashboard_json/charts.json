@@ -1,6 +1,49 @@
 {
   "dashboards": [
     {
+      "dashboard_id": "fellowship_school_app_25_26",
+      "title": "Fellowship School App 25-26",
+      "description": "Dashboard showing school-level metrics for the 2025-26 Fellowship program",
+      "charts": [
+        {
+          "chart_id": "student_count_school_app_25_26",
+          "title": "Student count - school app 25-26",
+          "chart_type": "Number",
+          "chart_type_description": "Display a single key metric prominently",
+          "data_source": "dev_intermediate.SFPC_25_26",
+          "metric_calculation": "SUM(no_of_students)",
+          "filters": [],
+          "measures": ["no_of_students"],
+          "dimensions": [],
+          "grain": "total"
+        },
+        {
+          "chart_id": "school_count_school_app_25_26",
+          "title": "School Count - school app 25-26",
+          "chart_type": "Number",
+          "chart_type_description": "Display a single key metric prominently",
+          "data_source": "dev_intermediate.SFPC_25_26",
+          "metric_calculation": "COUNT(DISTINCT school_id)",
+          "filters": [],
+          "measures": ["school_count"],
+          "dimensions": [],
+          "grain": "total"
+        },
+        {
+          "chart_id": "fellow_count_school_app_25_26",
+          "title": "Fellow Count - school app 25-26",
+          "chart_type": "Number",
+          "chart_type_description": "Display a single key metric prominently",
+          "data_source": "dev_intermediate.SFPC_25_26",
+          "metric_calculation": "COUNT(DISTINCT fellow_id)",
+          "filters": [],
+          "measures": ["fellow_count"],
+          "dimensions": [],
+          "grain": "total"
+        }
+      ]
+    },
+    {
       "dashboard_id": "cgi_donor_report",
       "title": "CGI Donor Report",
       "description": "Dashboard showing metrics and analytics for CGI donor-funded eco-champions program",
@@ -127,6 +170,52 @@
           "measures": ["q2_planned", "q2_conducted", "q3_planned", "q3_conducted", "q4_planned", "q4_conducted"],
           "dimensions": ["school"],
           "grain": "school"
+        }
+      ]
+    },
+    {
+      "dashboard_id": "fellowship_comparison",
+      "title": "Fellowship Comparison",
+      "description": "Baseline vs midline and year-over-year RF comparisons for Fellowship",
+      "charts": [
+        {
+          "chart_id": "baseline_2024_vs_2025_comparison",
+          "title": "Baseline 2024 vs 2025 comparison",
+          "chart_type": "Bar",
+          "chart_type_description": "Compare values across categories",
+          "data_source": "dev_prod.overall_RF_analysis_level_25_26",
+          "x_axis": "rf_level",
+          "metric_calculation": "AVERAGE(cohort_2024_count_base), AVERAGE(cohort_2025_count_base)",
+          "filters": [],
+          "measures": ["cohort_2024_count_base", "cohort_2025_count_base"],
+          "dimensions": ["rf_level"],
+          "grain": "rf_level"
+        },
+        {
+          "chart_id": "midline_2024_vs_2025_comparison",
+          "title": "Midline 2024 vs 2025 comparison",
+          "chart_type": "Bar",
+          "chart_type_description": "Compare values across categories",
+          "data_source": "dev_prod.overall_RF_analysis_level_25_26",
+          "x_axis": "rf_level",
+          "metric_calculation": "AVERAGE(cohort_2024_count_mid), AVERAGE(cohort_2025_count_mid)",
+          "filters": [],
+          "measures": ["cohort_2024_count_mid", "cohort_2025_count_mid"],
+          "dimensions": ["rf_level"],
+          "grain": "rf_level"
+        },
+        {
+          "chart_id": "base_vs_mid_rf_comparison_25_26",
+          "title": "Base vs Mid RF comparison 25-26",
+          "chart_type": "Bar",
+          "chart_type_description": "Compare values across categories",
+          "data_source": "dev_prod.overall_RF_analysis_level_25_26",
+          "x_axis": "rf_level",
+          "metric_calculation": "AVERAGE(student_count_base), AVERAGE(student_count_mid)",
+          "filters": [],
+          "measures": ["student_count_base", "student_count_mid"],
+          "dimensions": ["rf_level"],
+          "grain": "rf_level"
         }
       ]
     }

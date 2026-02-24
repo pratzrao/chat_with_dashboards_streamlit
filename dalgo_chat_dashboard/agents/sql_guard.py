@@ -78,10 +78,10 @@ class SqlGuard:
             warnings.append("SELECT * detected - consider specifying explicit columns")
         
         # 8. Check for forbidden schemas
-        forbidden_schema_patterns = [r'\bdev_\w+\.', r'\bairbyte_internal\.', r'\becochamps25_26\.']
+        forbidden_schema_patterns = [r'\bdev_(?!prod)\w+\.', r'\bairbyte_internal\.', r'\becochamps25_26\.']
         for pattern in forbidden_schema_patterns:
             if re.search(pattern, sql, re.IGNORECASE):
-                errors.append(f"Forbidden schema detected. Only use: prod, staging, intermediate")
+                errors.append(f"Forbidden schema detected. Only use: prod, dev_prod, staging, intermediate")
         
         is_valid = len(errors) == 0
         

@@ -217,8 +217,12 @@ class EnhancedToolOrchestrator:
         user_query: str,
         allow_retrieval: bool = True,
         conversation_history: Optional[List[Dict[str, str]]] = None,
+        selected_dashboard_id: Optional[str] = None,
     ) -> AgentResponse:
         """Process user query with enhanced tool orchestration"""
+        
+        # Store selected dashboard for retrieval filtering
+        self.selected_dashboard_id = selected_dashboard_id
         
         # Step 1: Extract conversation context
         conv_context = self.conversation_manager.extract_conversation_context(conversation_history or [])
@@ -513,11 +517,25 @@ class EnhancedToolOrchestrator:
         
         docs = []
         for doc_type in types:
+            # Build filter metadata for ChromaDB
+            if doc_type == "chart" and hasattr(self, 'selected_dashboard_id') and self.selected_dashboard_id:
+                # Use ChromaDB $and operator for multiple conditions
+                filter_meta = {
+                    "$and": [
+                        {"type": {"$eq": doc_type}},
+                        {"dashboard_id": {"$eq": self.selected_dashboard_id}}
+                    ]
+                }
+            else:
+                # Single condition filter
+                filter_meta = {"type": {"$eq": doc_type}}
+            
             results = self.vectorstore.retrieve(
                 query, 
                 n_results=limit, 
-                filter_metadata={"type": doc_type}
+                filter_metadata=filter_meta
             )
+            logger.info(f"Retrieved {len(results)} {doc_type} docs with filter {filter_meta}")
             docs.extend(results)
 
         # If returned docs types don't overlap requested types (or nothing found), retry once with all types
@@ -525,10 +543,23 @@ class EnhancedToolOrchestrator:
         if (not docs) or (set(types) and returned_types and not (returned_types & set(types))):
             docs = []
             for doc_type in ["chart", "dataset", "context", "dbt_model"]:
+                # Build filter metadata for retry with ChromaDB syntax
+                if doc_type == "chart" and hasattr(self, 'selected_dashboard_id') and self.selected_dashboard_id:
+                    # Use ChromaDB $and operator for multiple conditions
+                    filter_meta = {
+                        "$and": [
+                            {"type": {"$eq": doc_type}},
+                            {"dashboard_id": {"$eq": self.selected_dashboard_id}}
+                        ]
+                    }
+                else:
+                    # Single condition filter
+                    filter_meta = {"type": {"$eq": doc_type}}
+                
                 results = self.vectorstore.retrieve(
                     query,
                     n_results=limit,
-                    filter_metadata={"type": doc_type}
+                    filter_metadata=filter_meta
                 )
                 docs.extend(results)
 
@@ -960,7 +991,7 @@ IMPORTANT RULES:
 11. Limit get_schema_snippets to the tables you intend to query (avoid extra tables).
 12. If a requested geographic/location field is missing, choose the most specific available location dimension (e.g., city → chapter → school) and answer using that, explicitly noting the substitution in the response.
 13. When someone asks for "changes" in metrics, look for increases and decreases by comparing values across time periods (baseline vs midline vs endline) or comparing current vs previous periods.
-14. ONLY use these exact schemas: prod, staging, intermediate. NEVER use dev_staging, dev_prod, airbyte_internal, or any dev_ prefixed schemas. Charts will guide you to the right tables.
+14. ONLY use these exact schemas: prod, dev_prod, staging, intermediate. NEVER use dev_staging, airbyte_internal, or any other dev_ prefixed schemas. Charts will guide you to the right tables.
 
 Available tools:
 - retrieve_docs: Find relevant charts, datasets, context, or dbt models

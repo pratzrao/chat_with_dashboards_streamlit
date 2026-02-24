@@ -92,7 +92,7 @@ The app will:
 - **Dashboard Exports**: Organization dashboard/chart/dataset JSON/YAML metadata
 - **DBT Artifacts**: `manifest.json`, `catalog.json` for data lineage
 - **Human Context**: Organization-specific program documentation
-- **Live Database**: Read-only PostgreSQL connection for data queries
+- **Live Database**: Read-only PostgreSQL connection for data queries (allowed schemas: `prod`, `dev_prod`, `staging`, `intermediate`)
 
 ## Safety Features
 

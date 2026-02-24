@@ -46,6 +46,34 @@ class PostgresExecutor:
             logger.error(f"Connection test failed: {e}")
             return False
     
+    def execute(self, sql: str, params: tuple = None) -> bool:
+        """Execute DDL/DML SQL statements (CREATE, INSERT, UPDATE, DELETE)"""
+        try:
+            with self.get_connection() as conn:
+                with conn.cursor() as cursor:
+                    if params:
+                        cursor.execute(sql, params)
+                    else:
+                        cursor.execute(sql)
+                    return True
+        except Exception as e:
+            logger.error(f"SQL execution error: {e}")
+            return False
+
+    def execute_query(self, sql: str, params: tuple = None) -> List[tuple]:
+        """Execute SELECT queries and return raw results"""
+        try:
+            with self.get_connection() as conn:
+                with conn.cursor() as cursor:
+                    if params:
+                        cursor.execute(sql, params)
+                    else:
+                        cursor.execute(sql)
+                    return cursor.fetchall()
+        except Exception as e:
+            logger.error(f"SQL query error: {e}")
+            return []
+
     def execute_sql(self, sql: str) -> Dict[str, Any]:
         """Execute SQL and return results with metadata"""
         try:
@@ -107,8 +135,7 @@ class PostgresExecutor:
             is_nullable
         FROM information_schema.columns 
         WHERE table_schema NOT IN ('information_schema', 'pg_catalog', 'pg_toast', 'airbyte_internal')
-        AND table_schema IN ('prod', 'staging', 'intermediate')
-        AND table_schema NOT LIKE 'dev_%'
+        AND table_schema IN ('prod', 'dev_prod', 'staging', 'intermediate')
         {schema_filter}
         ORDER BY table_schema, table_name, ordinal_position
         """
