@@ -1,0 +1,134 @@
+{
+  "dashboards": [
+    {
+      "dashboard_id": "cgi_donor_report",
+      "title": "CGI Donor Report",
+      "description": "Dashboard showing metrics and analytics for CGI donor-funded eco-champions program",
+      "charts": [
+        {
+          "chart_id": "student_count_ecochamp_25_26_cgi",
+          "title": "Student count - ecochamp 25-26 - CGI",
+          "chart_type": "Number",
+          "chart_type_description": "Display a single key metric prominently",
+          "data_source": "staging.eco_student25_26_stg",
+          "metric_calculation": "COUNT_DISTINCT(Roll No)",
+          "filters": ["Donor Mapped = CGI"],
+          "measures": ["student_count"],
+          "dimensions": [],
+          "grain": "total"
+        },
+        {
+          "chart_id": "school_count_ecochamps_25_26_cgi",
+          "title": "School count - ecochamps 25-26 - CGI",
+          "chart_type": "Number", 
+          "chart_type_description": "Display a single key metric prominently",
+          "data_source": "staging.eco_student25_26_stg",
+          "metric_calculation": "COUNT_DISTINCT(School ID)",
+          "filters": ["Donor Mapped = CGI"],
+          "measures": ["school_count"],
+          "dimensions": [],
+          "grain": "total"
+        },
+        {
+          "chart_id": "planned_session_eco_25_26_cgi",
+          "title": "planned session - eco_25_26 - CGI",
+          "chart_type": "Number",
+          "chart_type_description": "Display a single key metric prominently", 
+          "data_source": "prod.plannedvsconducted_eco_25_26",
+          "metric_calculation": "SUM(planned_session)",
+          "filters": ["donor_mapped = CGI"],
+          "measures": ["planned_sessions"],
+          "dimensions": [],
+          "grain": "total"
+        },
+        {
+          "chart_id": "session_conducted_eco_25_26_cgi",
+          "title": "Session conducted - eco_25_26 - CGI",
+          "chart_type": "Number",
+          "chart_type_description": "Display a single key metric prominently",
+          "data_source": "prod.plannedvsconducted_eco_25_26", 
+          "metric_calculation": "SUM(conducted_session)",
+          "filters": ["donor_mapped = CGI"],
+          "measures": ["conducted_sessions"],
+          "dimensions": [],
+          "grain": "total"
+        },
+        {
+          "chart_id": "chapter_wise_count_eco_25_26_cgi",
+          "title": "Chapter wise count - eco 25-26 - CGI",
+          "chart_type": "Pie Chart",
+          "chart_type_description": "Show proportions of a whole",
+          "data_source": "staging.eco_student25_26_stg",
+          "metric_calculation": "COUNT_DISTINCT(School ID)",
+          "filters": ["Donor Mapped = CGI"],
+          "measures": ["school_count"],
+          "dimensions": ["Chapter"],
+          "grain": "chapter"
+        },
+        {
+          "chart_id": "school_data_across_chapter_eco_25_25_cgi",
+          "title": "School data across chapter - eco 25-25 - CGI",
+          "chart_type": "Table",
+          "chart_type_description": "Display data in rows and columns",
+          "data_source": "staging.eco_student25_26_stg",
+          "metric_calculation": "COUNT_DISTINCT(Roll No)",
+          "filters": ["Donor Mapped = CGI"],
+          "measures": ["student_count"],
+          "dimensions": ["School"],
+          "grain": "school"
+        },
+        {
+          "chart_id": "q2_session_planned_vs_conducted_eco_25_26_cgi",
+          "title": "Q2 session planned vs conducted eco -25-26 - CGI",
+          "chart_type": "Bar",
+          "chart_type_description": "Compare values across categories",
+          "data_source": "prod.plannedvsconducted_eco_25_26",
+          "x_axis": "donor_mapped",
+          "metric_calculation": "SUM(q2_planned), SUM(q2_conducted)",
+          "filters": ["donor_mapped = CGI"],
+          "measures": ["q2_planned", "q2_conducted"],
+          "dimensions": ["donor_mapped"],
+          "grain": "donor"
+        },
+        {
+          "chart_id": "q3_session_planned_vs_conducted_eco_25_26_cgi", 
+          "title": "Q3 session planned vs conducted eco -25-26 - CGI",
+          "chart_type": "Bar",
+          "chart_type_description": "Compare values across categories",
+          "data_source": "prod.plannedvsconducted_eco_25_26",
+          "x_axis": "donor_mapped",
+          "metric_calculation": "SUM(q3_planned), SUM(q3_conducted)",
+          "filters": ["donor_mapped = CGI"],
+          "measures": ["q3_planned", "q3_conducted"],
+          "dimensions": ["donor_mapped"],
+          "grain": "donor"
+        },
+        {
+          "chart_id": "q4_session_planned_vs_conducted_eco_25_26_cgi",
+          "title": "Q4 session planned vs conducted eco -25-26 - CGI", 
+          "chart_type": "Bar",
+          "chart_type_description": "Compare values across categories",
+          "data_source": "prod.plannedvsconducted_eco_25_26",
+          "x_axis": "donor_mapped",
+          "metric_calculation": "SUM(q4_planned), SUM(q4_conducted)",
+          "filters": ["donor_mapped = CGI"],
+          "measures": ["q4_planned", "q4_conducted"],
+          "dimensions": ["donor_mapped"],
+          "grain": "donor"
+        },
+        {
+          "chart_id": "planned_vs_conducted_eco_25_26_cgi",
+          "title": "planned vs conducted eco -25-26 - CGI",
+          "chart_type": "Table", 
+          "chart_type_description": "Display data in rows and columns",
+          "data_source": "prod.plannedvsconducted_eco_25_26",
+          "metric_calculation": "SUM(q2_planned), SUM(q2_conducted), SUM(q3_planned), SUM(q3_conducted), SUM(q4_planned), SUM(q4_conducted)",
+          "filters": ["donor_mapped = CGI"],
+          "measures": ["q2_planned", "q2_conducted", "q3_planned", "q3_conducted", "q4_planned", "q4_conducted"],
+          "dimensions": ["school"],
+          "grain": "school"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+database_name: Shofco postgres RDS
+sqlalchemy_uri: postgresql+psycopg2://superset_dalgo_user:XXXXXXXXXX@shofco-data-warehouse.ctorckrfcfcs.us-east-1.rds.amazonaws.com:5432/dalgo_warehouse?sslmode=require
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  allows_virtual_table_explore: true
+uuid: 71cf2438-c496-4970-a3d3-6520c5709d04
+version: 1.0.0

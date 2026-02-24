@@ -1,0 +1,90 @@
+slice_name: Reporting Channel
+description: null
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_bar
+params:
+  datasource: 109__table
+  viz_type: echarts_timeseries_bar
+  slice_id: 677
+  x_axis: medium_of_reporting
+  x_axis_sort: Number of Cases
+  x_axis_sort_asc: false
+  metrics:
+  - aggregate: COUNT_DISTINCT
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: case_id
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 90
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: TEXT
+      type_generic: 1
+      verbose_name: null
+      warning_markdown: null
+    datasourceWarning: false
+    expressionType: SIMPLE
+    hasCustomLabel: true
+    label: Number of Cases
+    optionName: metric_qoxaj3h7o5d_l8ddaqhgu4q
+    sqlExpression: null
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    datasourceWarning: false
+    expressionType: SIMPLE
+    filterOptionName: filter_8pjkufy452c_zvai4ht5sd
+    isExtra: true
+    isNew: false
+    operator: TEMPORAL_RANGE
+    sqlExpression: null
+    subject: date_of_case_reporting
+  row_limit: 10000
+  truncate_metric: true
+  show_empty_columns: true
+  annotation_layers: []
+  orientation: vertical
+  y_axis_title: Number of Cases
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  sort_series_type: sum
+  color_scheme: echarts5Colors
+  stack: Stack
+  zoomable: false
+  show_legend: true
+  legendType: scroll
+  legendOrientation: top
+  legendMargin: null
+  y_axis_format: SMART_NUMBER
+  logAxis: false
+  minorSplitLine: false
+  truncateXAxis: false
+  truncateYAxis: false
+  rich_tooltip: true
+  tooltipTimeFormat: '%B %Y'
+  extra_form_data: {}
+  dashboards:
+  - 100
+query_context: '{"datasource":{"id":109,"type":"table"},"force":false,"queries":[{"filters":[{"col":"date_of_case_reporting","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":[{"columnType":"BASE_AXIS","sqlExpression":"medium_of_reporting","label":"medium_of_reporting","expressionType":"SQL"}],"metrics":[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":90,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"Number
+  of Cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null}],"orderby":[[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":90,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"Number
+  of Cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null},false]],"annotation_layers":[],"row_limit":10000,"series_columns":[],"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"time_offsets":[],"post_processing":[{"operation":"pivot","options":{"index":["medium_of_reporting"],"columns":[],"aggregates":{"Number
+  of Cases":{"operator":"mean"}},"drop_missing_columns":false}},{"operation":"sort","options":{"by":"Number
+  of Cases","ascending":false}},{"operation":"flatten"}]}],"form_data":{"datasource":"109__table","viz_type":"echarts_timeseries_bar","slice_id":677,"x_axis":"medium_of_reporting","x_axis_sort":"Number
+  of Cases","x_axis_sort_asc":false,"metrics":[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":90,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"Number
+  of Cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null}],"groupby":[],"adhoc_filters":[{"clause":"WHERE","comparator":"No
+  filter","datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_8pjkufy452c_zvai4ht5sd","isExtra":true,"isNew":false,"operator":"TEMPORAL_RANGE","sqlExpression":null,"subject":"date_of_case_reporting"}],"row_limit":10000,"truncate_metric":true,"show_empty_columns":true,"annotation_layers":[],"orientation":"vertical","y_axis_title":"Number
+  of Cases","y_axis_title_margin":50,"y_axis_title_position":"Left","sort_series_type":"sum","color_scheme":"echarts5Colors","stack":"Stack","zoomable":false,"show_legend":true,"legendType":"scroll","legendOrientation":"top","legendMargin":null,"y_axis_format":"SMART_NUMBER","logAxis":false,"minorSplitLine":false,"truncateXAxis":false,"truncateYAxis":false,"rich_tooltip":true,"tooltipTimeFormat":"%B
+  %Y","extra_form_data":{},"dashboards":[100],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 3fdb4be0-fad8-46ef-9761-845b49ca3326
+version: 1.0.0
+dataset_uuid: e15357ae-9bd0-4318-8e14-418763354e87

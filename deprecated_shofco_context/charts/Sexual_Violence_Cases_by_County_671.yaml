@@ -1,0 +1,97 @@
+slice_name: Sexual Violence Cases by County
+description: null
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_bar
+params:
+  datasource: 109__table
+  viz_type: echarts_timeseries_bar
+  slice_id: 671
+  x_axis: county
+  x_axis_sort: cases
+  x_axis_sort_asc: false
+  metrics:
+  - aggregate: COUNT_DISTINCT
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: case_id
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 1026
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: TEXT
+      type_generic: 1
+      verbose_name: null
+      warning_markdown: null
+    datasourceWarning: false
+    expressionType: SIMPLE
+    hasCustomLabel: true
+    label: cases
+    optionName: metric_qoxaj3h7o5d_l8ddaqhgu4q
+    sqlExpression: null
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator:
+    - Sexual Violence
+    datasourceWarning: false
+    expressionType: SIMPLE
+    filterOptionName: filter_c9cxehaf7sw_whu1h6duazb
+    isExtra: false
+    isNew: false
+    operator: IN
+    operatorId: IN
+    sqlExpression: null
+    subject: cleaned_assault_type
+  - clause: WHERE
+    comparator: No filter
+    datasourceWarning: false
+    expressionType: SIMPLE
+    filterOptionName: filter_y5em8u8v9_63b727xt8z
+    isExtra: true
+    isNew: false
+    operator: TEMPORAL_RANGE
+    sqlExpression: null
+    subject: date_of_case_reporting
+  row_limit: 10000
+  truncate_metric: true
+  show_empty_columns: true
+  annotation_layers: []
+  orientation: vertical
+  y_axis_title: ''
+  y_axis_title_margin: 15
+  y_axis_title_position: Left
+  sort_series_type: sum
+  color_scheme: echarts5Colors
+  show_value: true
+  stack: Stack
+  only_total: true
+  minorTicks: false
+  show_legend: true
+  legendType: scroll
+  legendOrientation: top
+  y_axis_format: SMART_NUMBER
+  logAxis: false
+  minorSplitLine: false
+  truncateXAxis: true
+  truncateYAxis: false
+  rich_tooltip: true
+  tooltipTimeFormat: '%B %Y'
+  extra_form_data: {}
+  dashboards:
+  - 100
+query_context: '{"datasource":{"id":109,"type":"table"},"force":false,"queries":[{"filters":[{"col":"cleaned_assault_type","op":"IN","val":["Sexual
+  Violence"]},{"col":"date_of_case_reporting","op":"TEMPORAL_RANGE","val":"No filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":[{"columnType":"BASE_AXIS","sqlExpression":"county","label":"county","expressionType":"SQL"}],"metrics":[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null}],"orderby":[[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null},false]],"annotation_layers":[],"row_limit":10000,"series_columns":[],"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"time_offsets":[],"post_processing":[{"operation":"pivot","options":{"index":["county"],"columns":[],"aggregates":{"cases":{"operator":"mean"}},"drop_missing_columns":false}},{"operation":"sort","options":{"by":"cases","ascending":false}},{"operation":"flatten"}]}],"form_data":{"datasource":"109__table","viz_type":"echarts_timeseries_bar","slice_id":671,"x_axis":"county","x_axis_sort":"cases","x_axis_sort_asc":false,"metrics":[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null}],"groupby":[],"adhoc_filters":[{"clause":"WHERE","comparator":["Sexual
+  Violence"],"datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_c9cxehaf7sw_whu1h6duazb","isExtra":false,"isNew":false,"operator":"IN","operatorId":"IN","sqlExpression":null,"subject":"cleaned_assault_type"},{"clause":"WHERE","comparator":"No
+  filter","datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_y5em8u8v9_63b727xt8z","isExtra":true,"isNew":false,"operator":"TEMPORAL_RANGE","sqlExpression":null,"subject":"date_of_case_reporting"}],"row_limit":10000,"truncate_metric":true,"show_empty_columns":true,"annotation_layers":[],"orientation":"vertical","y_axis_title":"","y_axis_title_margin":15,"y_axis_title_position":"Left","sort_series_type":"sum","color_scheme":"echarts5Colors","show_value":true,"stack":"Stack","only_total":true,"minorTicks":false,"show_legend":true,"legendType":"scroll","legendOrientation":"top","y_axis_format":"SMART_NUMBER","logAxis":false,"minorSplitLine":false,"truncateXAxis":true,"truncateYAxis":false,"rich_tooltip":true,"tooltipTimeFormat":"%B
+  %Y","extra_form_data":{},"dashboards":[100],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 7068c6df-c1cb-46f2-92a0-a9c2e811881b
+version: 1.0.0
+dataset_uuid: e15357ae-9bd0-4318-8e14-418763354e87

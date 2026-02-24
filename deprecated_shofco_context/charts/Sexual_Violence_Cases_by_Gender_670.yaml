@@ -1,0 +1,98 @@
+slice_name: Sexual Violence Cases by Gender
+description: null
+certified_by: null
+certification_details: null
+viz_type: pie
+params:
+  datasource: 109__table
+  viz_type: pie
+  slice_id: 670
+  groupby:
+  - survivor_gender
+  metric:
+    aggregate: COUNT_DISTINCT
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: case_id
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 1026
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: TEXT
+      type_generic: 1
+      verbose_name: null
+      warning_markdown: null
+    datasourceWarning: false
+    expressionType: SIMPLE
+    hasCustomLabel: true
+    label: cases
+    optionName: metric_qoxaj3h7o5d_l8ddaqhgu4q
+    sqlExpression: null
+  adhoc_filters:
+  - expressionType: SIMPLE
+    subject: cleaned_assault_type
+    operator: IN
+    operatorId: IN
+    comparator:
+    - Sexual Violence
+    clause: WHERE
+    sqlExpression: null
+    isExtra: false
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_opk03t01cap_i6t14j5x9go
+  - expressionType: SIMPLE
+    subject: survivor_gender
+    operator: NOT IN
+    operatorId: NOT_IN
+    comparator:
+    - ''
+    clause: WHERE
+    sqlExpression: null
+    isExtra: false
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_7umyg0zcolb_nevyxqlyef
+  - expressionType: SIMPLE
+    subject: date_of_case_reporting
+    operator: TEMPORAL_RANGE
+    comparator: No filter
+    clause: WHERE
+    sqlExpression: null
+    isExtra: true
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_k91c7k9bjm_08ls992pcujr
+  row_limit: 100
+  sort_by_metric: true
+  color_scheme: echarts5Colors
+  show_labels_threshold: 5
+  show_legend: true
+  legendType: scroll
+  legendOrientation: top
+  label_type: key
+  number_format: SMART_NUMBER
+  date_format: smart_date
+  show_labels: true
+  labels_outside: true
+  outerRadius: 70
+  innerRadius: 30
+  extra_form_data: {}
+  dashboards:
+  - 100
+query_context: '{"datasource":{"id":109,"type":"table"},"force":false,"queries":[{"filters":[{"col":"cleaned_assault_type","op":"IN","val":["Sexual
+  Violence"]},{"col":"survivor_gender","op":"NOT IN","val":[""]},{"col":"date_of_case_reporting","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":["survivor_gender"],"metrics":[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null}],"orderby":[[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null},false]],"annotation_layers":[],"row_limit":100,"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{}}],"form_data":{"datasource":"109__table","viz_type":"pie","slice_id":670,"groupby":["survivor_gender"],"metric":{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null},"adhoc_filters":[{"expressionType":"SIMPLE","subject":"cleaned_assault_type","operator":"IN","operatorId":"IN","comparator":["Sexual
+  Violence"],"clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_opk03t01cap_i6t14j5x9go"},{"expressionType":"SIMPLE","subject":"survivor_gender","operator":"NOT
+  IN","operatorId":"NOT_IN","comparator":[""],"clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_7umyg0zcolb_nevyxqlyef"},{"expressionType":"SIMPLE","subject":"date_of_case_reporting","operator":"TEMPORAL_RANGE","comparator":"No
+  filter","clause":"WHERE","sqlExpression":null,"isExtra":true,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_k91c7k9bjm_08ls992pcujr"}],"row_limit":100,"sort_by_metric":true,"color_scheme":"echarts5Colors","show_labels_threshold":5,"show_legend":true,"legendType":"scroll","legendOrientation":"top","label_type":"key","number_format":"SMART_NUMBER","date_format":"smart_date","show_labels":true,"labels_outside":true,"outerRadius":70,"innerRadius":30,"extra_form_data":{},"dashboards":[100],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 868f0e65-810a-4723-bbfe-b1c2ab5696b7
+version: 1.0.0
+dataset_uuid: e15357ae-9bd0-4318-8e14-418763354e87

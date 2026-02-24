@@ -1,0 +1,38 @@
+slice_name: Conviction Rate for Cases Reaching Judgement
+description: null
+certified_by: null
+certification_details: null
+viz_type: big_number_total
+params:
+  datasource: 238__table
+  viz_type: big_number_total
+  slice_id: 699
+  metric:
+    aggregate: null
+    column: null
+    datasourceWarning: false
+    expressionType: SQL
+    hasCustomLabel: false
+    label: SUM(was_convicted)::numeric / NULLIF(SUM(reached_judgement)::numeric, 0)
+    optionName: metric_kv6cotg4x2_odwhkffajz
+    sqlExpression: SUM(was_convicted)::numeric / NULLIF(SUM(reached_judgement)::numeric,
+      0)
+  adhoc_filters: []
+  header_font_size: 0.6
+  subheader_font_size: 0.15
+  y_axis_format: ',.1%'
+  currency_format: {}
+  time_format: smart_date
+  conditional_formatting: []
+  extra_form_data: {}
+  dashboards:
+  - 100
+query_context: '{"datasource":{"id":238,"type":"table"},"force":false,"queries":[{"filters":[],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":[],"metrics":[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":false,"label":"SUM(was_convicted)::numeric
+  / NULLIF(SUM(reached_judgement)::numeric, 0)","optionName":"metric_kv6cotg4x2_odwhkffajz","sqlExpression":"SUM(was_convicted)::numeric
+  / NULLIF(SUM(reached_judgement)::numeric, 0)"}],"annotation_layers":[],"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{}}],"form_data":{"datasource":"238__table","viz_type":"big_number_total","slice_id":699,"metric":{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":false,"label":"SUM(was_convicted)::numeric
+  / NULLIF(SUM(reached_judgement)::numeric, 0)","optionName":"metric_kv6cotg4x2_odwhkffajz","sqlExpression":"SUM(was_convicted)::numeric
+  / NULLIF(SUM(reached_judgement)::numeric, 0)"},"adhoc_filters":[],"header_font_size":0.6,"subheader_font_size":0.15,"y_axis_format":",.1%","currency_format":{},"time_format":"smart_date","conditional_formatting":[],"extra_form_data":{},"dashboards":[100],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: e8cce2a4-b727-41d6-ab47-0d2a0cbd8f6f
+version: 1.0.0
+dataset_uuid: faf57ce5-3afa-4608-bc9c-208f3184a6ce

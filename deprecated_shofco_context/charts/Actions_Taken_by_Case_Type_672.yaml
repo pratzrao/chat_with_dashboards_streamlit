@@ -1,0 +1,127 @@
+slice_name: Actions Taken by Case Type
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  datasource: 109__table
+  viz_type: table
+  slice_id: 628
+  query_mode: aggregate
+  groupby:
+  - cleaned_assault_type
+  temporal_columns_lookup:
+    date_of_case_assignment: true
+    date_of_court_followup: true
+    date_of_safe_house_onboarding: true
+    date_of_safe_house_discharge: true
+    date_modified: true
+    date_of_case_reporting: true
+    date_of_case_intake: true
+    date_of_case_closure: true
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(case when referred_to_safe_house='yes' then 1 else 0 end)
+    column: null
+    aggregate: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: Referred to Safe House
+    optionName: metric_1jdl322tdxj_ngq9x0i5bz
+  - expressionType: SQL
+    sqlExpression: SUM(case when referred_to_counseling_and_support='yes' then 1 else
+      0 end)
+    column: null
+    aggregate: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: Referred to Counseling/Support
+    optionName: metric_ibc6ppd6s4g_w4nipyjhnb
+  - expressionType: SQL
+    sqlExpression: SUM(case when referred_for_medical_intervention='yes' then 1 else
+      0 end)
+    column: null
+    aggregate: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: Referred for Medical Intervention
+    optionName: metric_wn31jaxg5mf_86th0km70zh
+  - expressionType: SQL
+    sqlExpression: SUM(case when referred_to_other_shofco_programs='yes' then 1 else
+      0 end)
+    column: null
+    aggregate: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: Referred to Other SHOFCO Programs
+    optionName: metric_jkcrj9wuhgo_alj7fiey6oo
+  - expressionType: SQL
+    sqlExpression: SUM(case when referred_to_police='yes' then 1 else 0 end)
+    column: null
+    aggregate: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: Referred to Police
+    optionName: metric_pf2tk65xokp_71qu2sigg5b
+  - expressionType: SQL
+    sqlExpression: SUM(case when referred_to_dco='yes' then 1 else 0 end)
+    column: null
+    aggregate: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: Referred to DCO
+    optionName: metric_mqie1kb3gcc_f16kw7cpahj
+  all_columns: []
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: date_of_case_reporting
+    isExtra: true
+  order_by_cols: []
+  row_limit: 100
+  order_desc: true
+  table_timestamp_format: smart_date
+  allow_render_html: true
+  show_cell_bars: true
+  color_pn: true
+  comparison_color_scheme: Green
+  comparison_type: values
+  extra_form_data: {}
+  dashboards:
+  - 100
+query_context: '{"datasource":{"id":109,"type":"table"},"force":false,"queries":[{"filters":[{"col":"date_of_case_reporting","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":["cleaned_assault_type"],"metrics":[{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_safe_house=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Safe House","optionName":"metric_1jdl322tdxj_ngq9x0i5bz"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_counseling_and_support=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Counseling/Support","optionName":"metric_ibc6ppd6s4g_w4nipyjhnb"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_for_medical_intervention=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  for Medical Intervention","optionName":"metric_wn31jaxg5mf_86th0km70zh"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_other_shofco_programs=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Other SHOFCO Programs","optionName":"metric_jkcrj9wuhgo_alj7fiey6oo"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_police=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Police","optionName":"metric_pf2tk65xokp_71qu2sigg5b"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_dco=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to DCO","optionName":"metric_mqie1kb3gcc_f16kw7cpahj"}],"orderby":[[{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_safe_house=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Safe House","optionName":"metric_1jdl322tdxj_ngq9x0i5bz"},false]],"annotation_layers":[],"row_limit":100,"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[],"time_offsets":[]}],"form_data":{"datasource":"109__table","viz_type":"table","slice_id":628,"query_mode":"aggregate","groupby":["cleaned_assault_type"],"temporal_columns_lookup":{"date_of_case_assignment":true,"date_of_court_followup":true,"date_of_safe_house_onboarding":true,"date_of_safe_house_discharge":true,"date_modified":true,"date_of_case_reporting":true,"date_of_case_intake":true,"date_of_case_closure":true},"metrics":[{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_safe_house=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Safe House","optionName":"metric_1jdl322tdxj_ngq9x0i5bz"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_counseling_and_support=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Counseling/Support","optionName":"metric_ibc6ppd6s4g_w4nipyjhnb"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_for_medical_intervention=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  for Medical Intervention","optionName":"metric_wn31jaxg5mf_86th0km70zh"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_other_shofco_programs=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Other SHOFCO Programs","optionName":"metric_jkcrj9wuhgo_alj7fiey6oo"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_police=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to Police","optionName":"metric_pf2tk65xokp_71qu2sigg5b"},{"expressionType":"SQL","sqlExpression":"SUM(case
+  when referred_to_dco=''yes'' then 1 else 0 end)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"Referred
+  to DCO","optionName":"metric_mqie1kb3gcc_f16kw7cpahj"}],"all_columns":[],"percent_metrics":[],"adhoc_filters":[{"clause":"WHERE","comparator":"No
+  filter","expressionType":"SIMPLE","operator":"TEMPORAL_RANGE","subject":"date_of_case_reporting","isExtra":true}],"order_by_cols":[],"row_limit":100,"order_desc":true,"table_timestamp_format":"smart_date","allow_render_html":true,"show_cell_bars":true,"color_pn":true,"comparison_color_scheme":"Green","comparison_type":"values","extra_form_data":{},"dashboards":[100],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 6dd328be-c04c-4a9f-93d1-6d5083fa6184
+version: 1.0.0
+dataset_uuid: e15357ae-9bd0-4318-8e14-418763354e87

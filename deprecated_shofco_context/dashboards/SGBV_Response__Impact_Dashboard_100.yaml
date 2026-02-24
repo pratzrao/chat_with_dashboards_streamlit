@@ -1,0 +1,1570 @@
+dashboard_title: 'SGBV Response & Impact Dashboard '
+description: null
+css: "/*  style fonts */\n@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');\n\
+  \n\n/* style main top nav bar */\n  #main-menu, .ant-menu, .ant-tabs-nav-wrap{\n\
+  \    background-color: #f0f0f0!important;\n  }\n  \n  .grid-container{\n    margin:0!important;\n\
+  \  }\n  \n\n/* changing the font as globally as possible */\n  #main-menu + div\
+  \ *{\n      font-family: 'Roboto',sans-serif !important;\n  }\n  \n/* changing the\
+  \ main dash background */\n  .dashboard-content{\n      background-color: rgba(80,\
+  \ 176, 221, 0.1)!important;\n  }\n\n  /* changing the title bar background and text\
+  \ color */\n  /* note that the title text looks goofy in edit mode */\n  .header-with-actions\
+  \ {\n    background-color: #50B0DD;\n    color: white;\n    text-color: white;\n\
+  \  }\n\n\n  /* changing the filters bar background */\n  div[data-test=filter-bar]\
+  \ > div {\n    background: white;\n    padding-top:0px;\n    padding-bottom:0px;\n\
+  \  }\n  \n  .ant-tabs-nav-list .editable-title{\n    font-size: 16px!important;\n\
+  \    text-transform: uppercase!important;\n  }\n  \n  .ant-tabs-tab-active{\n  \
+  \  background-color:#50B0DD!important;\n    color:white!important;\n    text-transform:upper-case;\n\
+  \  }\n  \n  .grid-row {\n    padding: 10px 0px 10px 0px;\n    \n  }\n  \n  .dashboard-component\
+  \ .dashboard-component-chart-holder{\n     box-shadow:\n  0 1px 1px hsl(0deg 0%\
+  \ 0% / 0.075),\n      0 2px 2px hsl(0deg 0% 0% / 0.075),\n      0 4px 4px hsl(0deg\
+  \ 0% 0% / 0.075),\n      0 8px 8px hsl(0deg 0% 0% / 0.075),\n      0 16px 16px hsl(0deg\
+  \ 0% 0% / 0.075) !important;\n    padding-left:10px;\n    padding-right:10px;\n\
+  \  }\n  \n  .dashboard-component-tabs {\n    box-shadow:\n      1px 2px 2px hsl(199deg\
+  \ 68% 59% / 0.333),\n      2px 4px 4px hsl(199deg 68% 59% / 0.333),\n      3px 6px\
+  \ 6px hsl(199deg 68% 59% / 0.333)!important;\n  }\n  \n/* this hides BOTH the filter\
+  \ indicator and the chart menu \n  .header-controls {\n    display: none !important;\n\
+  \  }\n*/\n\n/* this hides just the chart header menu \n  .header-controls > .ant-dropdown-trigger\
+  \ {\n    display: none; \n  }\n  */\n  "
+slug: null
+certified_by: null
+certification_details: null
+published: true
+uuid: eef94bec-6324-4d4f-a5e3-1ee860e61cfc
+position:
+  CHART-explore-13-1:
+    children: []
+    id: CHART-explore-13-1
+    meta:
+      chartId: 629
+      height: 15
+      sliceName: Overall Cases Reported
+      uuid: 79435233-c977-4b1a-9e43-5c6ef8eef40c
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    - ROW-k4WR43mVcfaW7IC-rNLlG
+    type: CHART
+  CHART-explore-149-1:
+    children: []
+    id: CHART-explore-149-1
+    meta:
+      chartId: 639
+      height: 15
+      sliceName: Survivors Supported
+      uuid: 37cfe90d-341b-42dd-821b-f3934d180f76
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    - ROW-k4WR43mVcfaW7IC-rNLlG
+    type: CHART
+  CHART-explore-158-1:
+    children: []
+    id: CHART-explore-158-1
+    meta:
+      chartId: 664
+      height: 21
+      sliceName: Gender Champions Trained
+      uuid: 954719a2-7948-40f1-8f73-57b78a3d9b38
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-S55cjkBvAeCAICKmjP4Jg
+    - ROW-qGyJIab0nZud_go56xTD8
+    type: CHART
+  CHART-explore-469-1:
+    children: []
+    id: CHART-explore-469-1
+    meta:
+      chartId: 669
+      height: 77
+      sliceName: Sexual Violence Cases by Survivor Age Group
+      uuid: ef9fc720-a048-429f-b648-d8c7cd76ee2b
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-S0488odCwZwWCq2O1MnYB
+    type: CHART
+  CHART-explore-470-1:
+    children: []
+    id: CHART-explore-470-1
+    meta:
+      chartId: 671
+      height: 60
+      sliceName: Sexual Violence Cases by County
+      uuid: 7068c6df-c1cb-46f2-92a0-a9c2e811881b
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-N_3i878Z0ZhR9Vs_HZHoa
+    type: CHART
+  CHART-explore-471-1:
+    children: []
+    id: CHART-explore-471-1
+    meta:
+      chartId: 670
+      height: 62
+      sliceName: Sexual Violence Cases by Gender
+      uuid: 868f0e65-810a-4723-bbfe-b1c2ab5696b7
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-rFXt62IiOiWqNkC-Q8bZU
+    type: CHART
+  CHART-explore-672-1:
+    children: []
+    id: CHART-explore-672-1
+    meta:
+      chartId: 672
+      height: 50
+      sliceName: Actions Taken by Case Type
+      uuid: 6dd328be-c04c-4a9f-93d1-6d5083fa6184
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-zfow6q0d9gYDUh7TY8pax
+    - ROW-IPojJ2WgWFfFiCPG9UN7_
+    type: CHART
+  CHART-explore-673-1:
+    children: []
+    id: CHART-explore-673-1
+    meta:
+      chartId: 673
+      height: 50
+      sliceName: GBV Types Disaggregation
+      uuid: 03d11d4b-fa43-4be8-8016-3f3f8c83d7eb
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-zfow6q0d9gYDUh7TY8pax
+    - ROW-Z9JWf3eSGtmhtS2bBPd7v
+    type: CHART
+  CHART-explore-674-1:
+    children: []
+    id: CHART-explore-674-1
+    meta:
+      chartId: 674
+      height: 21
+      sliceName: Cases Reported by Champions
+      uuid: a7e28f09-8512-4102-9b04-620501bc37b0
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-S55cjkBvAeCAICKmjP4Jg
+    - ROW-qGyJIab0nZud_go56xTD8
+    type: CHART
+  CHART-explore-675-1:
+    children: []
+    id: CHART-explore-675-1
+    meta:
+      chartId: 675
+      height: 15
+      sliceName: Legal Support Provided
+      uuid: 40445d5e-720b-4738-b004-04a5c62da6ff
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    - ROW-k4WR43mVcfaW7IC-rNLlG
+    type: CHART
+  CHART-explore-676-1:
+    children: []
+    id: CHART-explore-676-1
+    meta:
+      chartId: 676
+      height: 22
+      sliceName: Cases at Judgement
+      uuid: 12222649-9601-487c-a51b-5122817205ad
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-aFNOQ17LT2DMcSxAX_C3A
+    type: CHART
+  CHART-explore-677-1:
+    children: []
+    id: CHART-explore-677-1
+    meta:
+      chartId: 677
+      height: 50
+      sliceName: Reporting Channel
+      uuid: 3fdb4be0-fad8-46ef-9761-845b49ca3326
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-ZQpjg2dYxo-_AmDZ_ytWk
+    - ROW-nBwZ9KCXUzwObo8O7s-RZ
+    type: CHART
+  CHART-explore-689-1:
+    children: []
+    id: CHART-explore-689-1
+    meta:
+      chartId: 689
+      height: 77
+      sliceName: Actions Per Case Type
+      uuid: 377512a9-2dc8-4e57-a621-ca2df47c67fd
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-zfow6q0d9gYDUh7TY8pax
+    - ROW-2fi13FUpNRfClW1bhKxp7
+    type: CHART
+  CHART-explore-690-1:
+    children: []
+    id: CHART-explore-690-1
+    meta:
+      chartId: 690
+      height: 21
+      sliceName: Counties Covered
+      uuid: 2fd602e6-ccf9-4fe4-9961-5ff5758c6cdb
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-S55cjkBvAeCAICKmjP4Jg
+    - ROW-qGyJIab0nZud_go56xTD8
+    type: CHART
+  CHART-explore-691-1:
+    children: []
+    id: CHART-explore-691-1
+    meta:
+      chartId: 691
+      height: 22
+      sliceName: Cases at Hearing
+      uuid: 8ff578bb-ef08-41ef-a0cf-17c32cc9c939
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-aFNOQ17LT2DMcSxAX_C3A
+    type: CHART
+  CHART-explore-692-1:
+    children: []
+    id: CHART-explore-692-1
+    meta:
+      chartId: 692
+      height: 22
+      sliceName: Cases at Mention
+      uuid: d1c21286-8817-4c7e-90c8-ae3e83d5a498
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-aFNOQ17LT2DMcSxAX_C3A
+    type: CHART
+  CHART-explore-693-1:
+    children: []
+    id: CHART-explore-693-1
+    meta:
+      chartId: 693
+      height: 22
+      sliceName: Sexual Violence Cases Reported
+      uuid: d44873dd-fd70-4ba4-bd64-aac55c1eeffb
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-pXW_RJp8RvBemqOKVsz8d
+    type: CHART
+  CHART-explore-694-1:
+    children: []
+    id: CHART-explore-694-1
+    meta:
+      chartId: 694
+      height: 22
+      sliceName: Sexual Violence Cases Reported to Police
+      uuid: 434833e5-112a-4ef1-96e5-245afe5a71bc
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-pXW_RJp8RvBemqOKVsz8d
+    type: CHART
+  CHART-explore-695-1:
+    children: []
+    id: CHART-explore-695-1
+    meta:
+      chartId: 695
+      height: 24
+      sliceName: Sexual Violence Cases Convicted
+      uuid: 5ce012b4-5548-40c8-a218-4c3c477da384
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-L9InztpGjHgsrMDF_JV22
+    type: CHART
+  CHART-explore-696-1:
+    children: []
+    id: CHART-explore-696-1
+    meta:
+      chartId: 696
+      height: 22
+      sliceName: Sexual Violence Cases Withdrawn
+      uuid: 8e37b2cf-94d1-4cc6-a7cc-01536442446a
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - ROW-pXW_RJp8RvBemqOKVsz8d
+    type: CHART
+  CHART-explore-697-1:
+    children: []
+    id: CHART-explore-697-1
+    meta:
+      chartId: 697
+      height: 18
+      sliceName: Convictions Achieved
+      uuid: 06a885a5-35b1-4912-a753-4f09765b1b91
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    - ROW-Z-WFTsgNGmDcYgHWw5P_2
+    type: CHART
+  CHART-explore-698-1:
+    children: []
+    id: CHART-explore-698-1
+    meta:
+      chartId: 698
+      height: 18
+      sliceName: Cases at Judgement
+      uuid: 8ced0542-1f3e-417b-9f13-c684c43ee9e9
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    - ROW-Z-WFTsgNGmDcYgHWw5P_2
+    type: CHART
+  CHART-explore-699-1:
+    children: []
+    id: CHART-explore-699-1
+    meta:
+      chartId: 699
+      height: 18
+      sliceName: Conviction Rate for Cases ReachingJudgement
+      uuid: e8cce2a4-b727-41d6-ab47-0d2a0cbd8f6f
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    - ROW-Z-WFTsgNGmDcYgHWw5P_2
+    type: CHART
+  DASHBOARD_VERSION_KEY: v2
+  GRID_ID:
+    children:
+    - TABS-9par5vslem
+    id: GRID_ID
+    parents:
+    - ROOT_ID
+    type: GRID
+  HEADER_ID:
+    id: HEADER_ID
+    meta:
+      text: 'SGBV Response & Impact Dashboard '
+    type: HEADER
+  ROOT_ID:
+    children:
+    - GRID_ID
+    id: ROOT_ID
+    type: ROOT
+  ROW-2fi13FUpNRfClW1bhKxp7:
+    children:
+    - CHART-explore-689-1
+    id: ROW-2fi13FUpNRfClW1bhKxp7
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-zfow6q0d9gYDUh7TY8pax
+    type: ROW
+  ROW-IPojJ2WgWFfFiCPG9UN7_:
+    children:
+    - CHART-explore-672-1
+    id: ROW-IPojJ2WgWFfFiCPG9UN7_
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-zfow6q0d9gYDUh7TY8pax
+    type: ROW
+  ROW-L9InztpGjHgsrMDF_JV22:
+    children:
+    - CHART-explore-695-1
+    id: ROW-L9InztpGjHgsrMDF_JV22
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    type: ROW
+  ROW-N_3i878Z0ZhR9Vs_HZHoa:
+    children:
+    - CHART-explore-470-1
+    id: ROW-N_3i878Z0ZhR9Vs_HZHoa
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    type: ROW
+  ROW-S0488odCwZwWCq2O1MnYB:
+    children:
+    - CHART-explore-469-1
+    id: ROW-S0488odCwZwWCq2O1MnYB
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    type: ROW
+  ROW-Z-WFTsgNGmDcYgHWw5P_2:
+    children:
+    - CHART-explore-697-1
+    - CHART-explore-699-1
+    - CHART-explore-698-1
+    id: ROW-Z-WFTsgNGmDcYgHWw5P_2
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    type: ROW
+  ROW-Z9JWf3eSGtmhtS2bBPd7v:
+    children:
+    - CHART-explore-673-1
+    id: ROW-Z9JWf3eSGtmhtS2bBPd7v
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-zfow6q0d9gYDUh7TY8pax
+    type: ROW
+  ROW-aFNOQ17LT2DMcSxAX_C3A:
+    children:
+    - CHART-explore-692-1
+    - CHART-explore-691-1
+    - CHART-explore-676-1
+    id: ROW-aFNOQ17LT2DMcSxAX_C3A
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    type: ROW
+  ROW-k4WR43mVcfaW7IC-rNLlG:
+    children:
+    - CHART-explore-13-1
+    - CHART-explore-149-1
+    - CHART-explore-675-1
+    id: ROW-k4WR43mVcfaW7IC-rNLlG
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    type: ROW
+  ROW-nBwZ9KCXUzwObo8O7s-RZ:
+    children:
+    - CHART-explore-677-1
+    id: ROW-nBwZ9KCXUzwObo8O7s-RZ
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-ZQpjg2dYxo-_AmDZ_ytWk
+    type: ROW
+  ROW-pXW_RJp8RvBemqOKVsz8d:
+    children:
+    - CHART-explore-693-1
+    - CHART-explore-694-1
+    - CHART-explore-696-1
+    id: ROW-pXW_RJp8RvBemqOKVsz8d
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    type: ROW
+  ROW-qGyJIab0nZud_go56xTD8:
+    children:
+    - CHART-explore-158-1
+    - CHART-explore-690-1
+    - CHART-explore-674-1
+    id: ROW-qGyJIab0nZud_go56xTD8
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-S55cjkBvAeCAICKmjP4Jg
+    type: ROW
+  ROW-rFXt62IiOiWqNkC-Q8bZU:
+    children:
+    - CHART-explore-471-1
+    id: ROW-rFXt62IiOiWqNkC-Q8bZU
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    type: ROW
+  TAB-35ynZt1sh4sQcB6h1ojFd:
+    children:
+    - ROW-k4WR43mVcfaW7IC-rNLlG
+    - ROW-Z-WFTsgNGmDcYgHWw5P_2
+    id: TAB-35ynZt1sh4sQcB6h1ojFd
+    meta:
+      defaultText: Tab title
+      placeholder: Tab title
+      text: Overview
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    type: TAB
+  TAB-FaVQ2B6_E5gHzA0Zw_t4f:
+    children:
+    - ROW-pXW_RJp8RvBemqOKVsz8d
+    - ROW-aFNOQ17LT2DMcSxAX_C3A
+    - ROW-L9InztpGjHgsrMDF_JV22
+    - ROW-N_3i878Z0ZhR9Vs_HZHoa
+    - ROW-rFXt62IiOiWqNkC-Q8bZU
+    - ROW-S0488odCwZwWCq2O1MnYB
+    id: TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    meta:
+      defaultText: Tab title
+      placeholder: Tab title
+      text: Legal Support
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    type: TAB
+  TAB-S55cjkBvAeCAICKmjP4Jg:
+    children:
+    - ROW-qGyJIab0nZud_go56xTD8
+    id: TAB-S55cjkBvAeCAICKmjP4Jg
+    meta:
+      defaultText: Tab title
+      placeholder: Tab title
+      text: Community Engagement
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    type: TAB
+  TAB-ZQpjg2dYxo-_AmDZ_ytWk:
+    children:
+    - ROW-nBwZ9KCXUzwObo8O7s-RZ
+    id: TAB-ZQpjg2dYxo-_AmDZ_ytWk
+    meta:
+      defaultText: Tab title
+      placeholder: Tab title
+      text: Reporting Channels
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    type: TAB
+  TAB-zfow6q0d9gYDUh7TY8pax:
+    children:
+    - ROW-Z9JWf3eSGtmhtS2bBPd7v
+    - ROW-IPojJ2WgWFfFiCPG9UN7_
+    - ROW-2fi13FUpNRfClW1bhKxp7
+    id: TAB-zfow6q0d9gYDUh7TY8pax
+    meta:
+      defaultText: Tab title
+      placeholder: Tab title
+      text: Case Profile
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-9par5vslem
+    type: TAB
+  TABS-9par5vslem:
+    children:
+    - TAB-35ynZt1sh4sQcB6h1ojFd
+    - TAB-FaVQ2B6_E5gHzA0Zw_t4f
+    - TAB-S55cjkBvAeCAICKmjP4Jg
+    - TAB-ZQpjg2dYxo-_AmDZ_ytWk
+    - TAB-zfow6q0d9gYDUh7TY8pax
+    id: TABS-9par5vslem
+    meta: {}
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: TABS
+metadata:
+  chart_configuration:
+    '669':
+      id: 669
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 629
+        - 639
+        - 664
+        - 670
+        - 671
+        - 672
+        - 673
+        - 674
+        - 675
+        - 676
+        - 677
+        - 689
+        - 690
+        - 691
+        - 692
+        - 693
+        - 694
+        - 695
+        - 696
+        - 697
+        - 698
+        - 699
+    '670':
+      id: 670
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 629
+        - 639
+        - 664
+        - 669
+        - 671
+        - 672
+        - 673
+        - 674
+        - 675
+        - 676
+        - 677
+        - 689
+        - 690
+        - 691
+        - 692
+        - 693
+        - 694
+        - 695
+        - 696
+        - 697
+        - 698
+        - 699
+    '671':
+      id: 671
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 629
+        - 639
+        - 664
+        - 669
+        - 670
+        - 672
+        - 673
+        - 674
+        - 675
+        - 676
+        - 677
+        - 689
+        - 690
+        - 691
+        - 692
+        - 693
+        - 694
+        - 695
+        - 696
+        - 697
+        - 698
+        - 699
+    '672':
+      id: 672
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 629
+        - 639
+        - 664
+        - 669
+        - 670
+        - 671
+        - 673
+        - 674
+        - 675
+        - 676
+        - 677
+        - 689
+        - 690
+        - 691
+        - 692
+        - 693
+        - 694
+        - 695
+        - 696
+        - 697
+        - 698
+        - 699
+    '673':
+      id: 673
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 629
+        - 639
+        - 664
+        - 669
+        - 670
+        - 671
+        - 672
+        - 674
+        - 675
+        - 676
+        - 677
+        - 689
+        - 690
+        - 691
+        - 692
+        - 693
+        - 694
+        - 695
+        - 696
+        - 697
+        - 698
+        - 699
+    '677':
+      id: 677
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 629
+        - 639
+        - 664
+        - 669
+        - 670
+        - 671
+        - 672
+        - 673
+        - 674
+        - 675
+        - 676
+        - 689
+        - 690
+        - 691
+        - 692
+        - 693
+        - 694
+        - 695
+        - 696
+        - 697
+        - 698
+        - 699
+    '689':
+      id: 689
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 629
+        - 639
+        - 664
+        - 669
+        - 670
+        - 671
+        - 672
+        - 673
+        - 674
+        - 675
+        - 676
+        - 677
+        - 690
+        - 691
+        - 692
+        - 693
+        - 694
+        - 695
+        - 696
+        - 697
+        - 698
+        - 699
+  global_chart_configuration:
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    chartsInScope:
+    - 629
+    - 639
+    - 664
+    - 669
+    - 670
+    - 671
+    - 672
+    - 673
+    - 674
+    - 675
+    - 676
+    - 677
+    - 689
+    - 690
+    - 691
+    - 692
+    - 693
+    - 694
+    - 695
+    - 696
+    - 697
+    - 698
+    - 699
+  color_scheme: echarts5Colors
+  refresh_frequency: 21600
+  expanded_slices: {}
+  label_colors: {}
+  timed_refresh_immune_slices: []
+  cross_filters_enabled: true
+  native_filter_configuration:
+  - id: NATIVE_FILTER-K__3WQHQe
+    controlValues:
+      enableEmptyFilter: false
+    name: Time range
+    filterType: filter_time
+    targets:
+    - {}
+    defaultDataMask:
+      extraFormData:
+        time_range: '2024-01-01T00:00:00 : now'
+      filterState:
+        value: '2024-01-01T00:00:00 : now'
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 1
+    - 2
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 10
+    - 13
+    - 14
+    - 21
+    - 23
+    - 29
+    - 32
+    - 46
+    - 47
+    - 128
+    - 135
+    - 148
+    - 149
+    - 150
+    - 151
+    - 152
+    - 154
+    - 155
+    - 157
+    - 158
+    - 159
+    - 160
+    - 162
+    - 163
+    - 164
+    - 165
+    - 167
+    - 168
+    - 169
+    - 170
+    - 171
+    - 172
+    - 174
+    - 175
+    - 176
+    - 223
+    - 224
+    - 225
+    - 421
+    - 426
+    - 427
+    - 428
+    - 429
+    - 430
+    tabsInScope:
+    - TAB-ujthJgZrC
+    - TAB-WXIPPlE2q_
+    - TAB-wPC1Uyu3a
+    - TAB-u_Fi-_v7Y
+    - TAB-paapCz-vU
+    - TAB-uAow-Y2Yt
+    - TAB-iLKXfN4cL
+    - TAB-pcpVf-rQw
+  - id: NATIVE_FILTER-9kg9Bij3i
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: County
+    filterType: filter_select
+    targets:
+    - column:
+        name: county
+      datasetUuid: e15357ae-9bd0-4318-8e14-418763354e87
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds:
+    - NATIVE_FILTER-K__3WQHQe
+    scope:
+      rootPath:
+      - TAB-iLKXfN4cL
+      - TAB-ujthJgZrC
+      excluded: []
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 1
+    - 2
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 10
+    - 13
+    - 14
+    - 29
+    - 32
+    - 128
+    - 148
+    - 149
+    - 150
+    - 151
+    - 152
+    - 154
+    - 155
+    - 157
+    - 158
+    - 159
+    - 160
+    - 162
+    - 163
+    - 164
+    - 165
+    - 167
+    - 171
+    - 172
+    - 176
+    - 223
+    - 224
+    - 225
+    - 421
+    - 426
+    - 427
+    - 428
+    - 429
+    - 430
+    tabsInScope:
+    - TAB-ujthJgZrC
+    - TAB-WXIPPlE2q_
+    - TAB-wPC1Uyu3a
+    - TAB-u_Fi-_v7Y
+    - TAB-paapCz-vU
+    - TAB-iLKXfN4cL
+    granularity_sqla: null
+  - id: NATIVE_FILTER-w_Qv2QtC7
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: Constituency
+    filterType: filter_select
+    targets:
+    - column:
+        name: case_constituency_name
+      datasetUuid: e15357ae-9bd0-4318-8e14-418763354e87
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds:
+    - NATIVE_FILTER-9kg9Bij3i
+    scope:
+      rootPath:
+      - TAB-iLKXfN4cL
+      - TAB-pcpVf-rQw
+      - TAB-ujthJgZrC
+      excluded:
+      - 23
+      - 135
+      - 21
+      - 47
+      - 46
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 1
+    - 2
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 10
+    - 13
+    - 14
+    - 21
+    - 23
+    - 29
+    - 32
+    - 46
+    - 47
+    - 128
+    - 135
+    - 148
+    - 149
+    - 150
+    - 151
+    - 152
+    - 154
+    - 155
+    - 157
+    - 158
+    - 159
+    - 160
+    - 162
+    - 163
+    - 164
+    - 165
+    - 167
+    - 168
+    - 169
+    - 170
+    - 171
+    - 172
+    - 174
+    - 175
+    - 176
+    - 223
+    - 224
+    - 225
+    - 421
+    - 426
+    - 427
+    - 428
+    - 429
+    - 430
+    tabsInScope:
+    - TAB-ujthJgZrC
+    - TAB-WXIPPlE2q_
+    - TAB-wPC1Uyu3a
+    - TAB-u_Fi-_v7Y
+    - TAB-paapCz-vU
+    - TAB-uAow-Y2Yt
+    - TAB-iLKXfN4cL
+    - TAB-pcpVf-rQw
+  - id: NATIVE_FILTER-da6z_LXbT
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: Ward
+    filterType: filter_select
+    targets:
+    - column:
+        name: case_ward_name
+      datasetUuid: e15357ae-9bd0-4318-8e14-418763354e87
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds:
+    - NATIVE_FILTER-w_Qv2QtC7
+    - NATIVE_FILTER-9kg9Bij3i
+    scope:
+      rootPath:
+      - TAB-iLKXfN4cL
+      - TAB-ujthJgZrC
+      excluded:
+      - 23
+      - 135
+      - 21
+      - 47
+      - 46
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 1
+    - 2
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 10
+    - 13
+    - 14
+    - 21
+    - 23
+    - 29
+    - 32
+    - 46
+    - 47
+    - 128
+    - 135
+    - 148
+    - 149
+    - 150
+    - 151
+    - 152
+    - 154
+    - 155
+    - 157
+    - 158
+    - 159
+    - 160
+    - 162
+    - 163
+    - 164
+    - 165
+    - 167
+    - 171
+    - 172
+    - 176
+    - 223
+    - 224
+    - 225
+    - 421
+    - 426
+    - 427
+    - 428
+    - 429
+    - 430
+    tabsInScope:
+    - TAB-ujthJgZrC
+    - TAB-WXIPPlE2q_
+    - TAB-wPC1Uyu3a
+    - TAB-u_Fi-_v7Y
+    - TAB-paapCz-vU
+    - TAB-uAow-Y2Yt
+    - TAB-iLKXfN4cL
+  - id: NATIVE_FILTER-YC-LzXoMF
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: Site
+    filterType: filter_select
+    targets:
+    - column:
+        name: site
+      datasetUuid: e15357ae-9bd0-4318-8e14-418763354e87
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds:
+    - NATIVE_FILTER-9kg9Bij3i
+    scope:
+      rootPath:
+      - TAB-iLKXfN4cL
+      - TAB-ujthJgZrC
+      excluded:
+      - 23
+      - 135
+      - 21
+      - 47
+      - 46
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 1
+    - 2
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 10
+    - 13
+    - 14
+    - 21
+    - 23
+    - 29
+    - 32
+    - 46
+    - 47
+    - 128
+    - 135
+    - 148
+    - 149
+    - 150
+    - 151
+    - 152
+    - 154
+    - 155
+    - 157
+    - 158
+    - 159
+    - 160
+    - 162
+    - 163
+    - 164
+    - 165
+    - 167
+    - 171
+    - 172
+    - 176
+    - 223
+    - 224
+    - 225
+    - 421
+    - 426
+    - 427
+    - 428
+    - 429
+    - 430
+    tabsInScope:
+    - TAB-ujthJgZrC
+    - TAB-WXIPPlE2q_
+    - TAB-wPC1Uyu3a
+    - TAB-u_Fi-_v7Y
+    - TAB-paapCz-vU
+    - TAB-uAow-Y2Yt
+    - TAB-iLKXfN4cL
+  - id: NATIVE_FILTER-7igO3ggWo
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: Case Worker
+    filterType: filter_select
+    targets:
+    - column:
+        name: assigned_to
+      datasetUuid: e15357ae-9bd0-4318-8e14-418763354e87
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds:
+    - NATIVE_FILTER-K__3WQHQe
+    - NATIVE_FILTER-9kg9Bij3i
+    scope:
+      rootPath:
+      - TAB-iLKXfN4cL
+      - TAB-ujthJgZrC
+      excluded:
+      - 23
+      - 135
+      - 21
+      - 14
+      - 154
+      - 155
+      - 157
+      - 158
+      - 159
+      - 160
+      - 162
+      - 163
+      - 164
+      - 165
+      - 167
+      - 171
+      - 172
+      - 29
+      - 47
+      - 46
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 1
+    - 2
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 10
+    - 13
+    - 32
+    - 128
+    - 148
+    - 149
+    - 150
+    - 151
+    - 152
+    - 153
+    - 156
+    - 176
+    - 419
+    - 421
+    tabsInScope:
+    - TAB-ujthJgZrC
+    - TAB-WXIPPlE2q_
+    - TAB-wPC1Uyu3a
+    - TAB-paapCz-vU
+    - TAB-iLKXfN4cL
+    granularity_sqla: null
+  - id: NATIVE_FILTER-yvNTEfn9G
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: Case Closed ?
+    filterType: filter_select
+    targets:
+    - column:
+        name: case_is_closed
+      datasetUuid: e15357ae-9bd0-4318-8e14-418763354e87
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded:
+      - 1
+      - 2
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 10
+      - 13
+      - 14
+      - 21
+      - 23
+      - 29
+      - 32
+      - 46
+      - 47
+      - 128
+      - 135
+      - 148
+      - 149
+      - 150
+      - 151
+      - 152
+      - 153
+      - 154
+      - 155
+      - 156
+      - 157
+      - 158
+      - 159
+      - 160
+      - 162
+      - 163
+      - 164
+      - 165
+      - 167
+      - 168
+      - 169
+      - 170
+      - 171
+      - 172
+      - 174
+      - 175
+      - 176
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 419
+    - 421
+    tabsInScope:
+    - TAB-iLKXfN4cL
+  - id: NATIVE_FILTER-0h0uS5vk9znEgb79yl0Dn
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: Counsellor
+    filterType: filter_select
+    targets:
+    - column:
+        name: registered_by
+      datasetUuid: 75880cc0-c445-4578-bd86-d40070b30614
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-uAow-Y2Yt
+      excluded: []
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 21
+    - 23
+    - 46
+    - 47
+    - 135
+    tabsInScope:
+    - TAB-ujthJgZrC
+    - TAB-uAow-Y2Yt
+  - id: NATIVE_FILTER-SpFMPmN0Il76EkfwLsy04
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: Assigned To
+    filterType: filter_select
+    targets:
+    - column:
+        name: assigned_to
+      datasetUuid: 78e6a1d8-bdca-4b64-836e-a7cf59d70e8e
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-iLKXfN4cL
+      excluded:
+      - 157
+      - 158
+      - 159
+      - 160
+      - 162
+      - 163
+      - 164
+      - 165
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 155
+    - 167
+    - 428
+    tabsInScope:
+    - TAB-iLKXfN4cL
+  filter_bar_orientation: VERTICAL
+  stagger_refresh: true
+  shared_label_colors:
+    cases: '#5470C6'
+    Referred to Counseling/Support: '#5470C6'
+    Referred to Police: '#91CC75'
+    Referred for Medical Intervention: '#FAC858'
+    Referred to Other SHOFCO Programs: '#EE6666'
+    Referred to DCO: '#73C0DE'
+    Referred to Safe House: '#3BA272'
+    Seeking Legal Counsel: '#5470C6'
+    Negligence: '#91CC75'
+    Domestic Violence: '#FAC858'
+    Sexual Violence: '#EE6666'
+    Physical Violence: '#73C0DE'
+    Other: '#3BA272'
+    Juvenile Case: '#FC8452'
+    Number of Cases: '#5470C6'
+  color_scheme_domain:
+  - '#5470C6'
+  - '#91CC75'
+  - '#FAC858'
+  - '#EE6666'
+  - '#73C0DE'
+  - '#3BA272'
+  - '#FC8452'
+  - '#9A60B4'
+  - '#EA7CCC'
+  default_filters: '{}'
+version: 1.0.0

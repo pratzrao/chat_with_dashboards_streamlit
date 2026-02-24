@@ -1,0 +1,110 @@
+slice_name: Sexual Violence Cases by Survivor Age Group
+description: null
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_bar
+params:
+  datasource: 109__table
+  viz_type: echarts_timeseries_bar
+  slice_id: 150
+  x_axis:
+    datasourceWarning: false
+    expressionType: SQL
+    label: age_group
+    sqlExpression: "CASE\n    WHEN age_group = '<15 years' THEN '0 - 15 years'\n \
+      \   ELSE age_group\nEND"
+  time_grain_sqla: P1D
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: case_id
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 1026
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: TEXT
+      type_generic: 1
+      verbose_name: null
+      warning_markdown: null
+    aggregate: COUNT_DISTINCT
+    sqlExpression: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: cases
+    optionName: metric_qoxaj3h7o5d_l8ddaqhgu4q
+  groupby: []
+  adhoc_filters:
+  - expressionType: SIMPLE
+    subject: cleaned_assault_type
+    operator: IN
+    operatorId: IN
+    comparator:
+    - Sexual Violence
+    clause: WHERE
+    sqlExpression: null
+    isExtra: false
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_opk03t01cap_i6t14j5x9go
+  - expressionType: SIMPLE
+    subject: date_of_case_reporting
+    operator: TEMPORAL_RANGE
+    comparator: No filter
+    clause: WHERE
+    sqlExpression: null
+    isExtra: true
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_k91c7k9bjm_08ls992pcujr
+  row_limit: 10000
+  truncate_metric: true
+  show_empty_columns: true
+  comparison_type: values
+  annotation_layers: []
+  forecastPeriods: 10
+  forecastInterval: 0.8
+  orientation: vertical
+  x_axis_title: ''
+  x_axis_title_margin: 15
+  y_axis_title: ''
+  y_axis_title_margin: 15
+  y_axis_title_position: Left
+  sort_series_type: sum
+  color_scheme: echarts5Colors
+  stack: Stack
+  only_total: true
+  show_legend: true
+  legendType: scroll
+  legendOrientation: top
+  x_axis_time_format: smart_date
+  xAxisLabelRotation: 45
+  y_axis_format: SMART_NUMBER
+  logAxis: false
+  minorSplitLine: false
+  truncateXAxis: true
+  truncateYAxis: false
+  y_axis_bounds:
+  - null
+  - null
+  rich_tooltip: true
+  tooltipTimeFormat: smart_date
+  extra_form_data: {}
+  dashboards:
+  - 2
+query_context: '{"datasource":{"id":109,"type":"table"},"force":false,"queries":[{"filters":[{"col":"cleaned_assault_type","op":"IN","val":["Sexual
+  Violence"]},{"col":"date_of_case_reporting","op":"TEMPORAL_RANGE","val":"No filter"}],"extras":{"time_grain_sqla":"P1D","having":"","where":""},"applied_time_extras":{},"columns":[{"timeGrain":"P1D","columnType":"BASE_AXIS","datasourceWarning":false,"expressionType":"SQL","label":"age_group","sqlExpression":"CASE\n    WHEN
+  age_group = ''<15 years'' THEN ''0 - 15 years''\n    ELSE age_group\nEND"}],"metrics":[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null}],"orderby":[[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null},false]],"annotation_layers":[],"row_limit":10000,"series_columns":[],"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"time_offsets":[],"post_processing":[{"operation":"pivot","options":{"index":["age_group"],"columns":[],"aggregates":{"cases":{"operator":"mean"}},"drop_missing_columns":false}},{"operation":"flatten"}]}],"form_data":{"adhoc_filters":[{"clause":"WHERE","comparator":["Sexual
+  Violence"],"datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_opk03t01cap_i6t14j5x9go","isExtra":false,"isNew":false,"operator":"IN","operatorId":"IN","sqlExpression":null,"subject":"cleaned_assault_type"},{"clause":"WHERE","comparator":"No
+  filter","datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_k91c7k9bjm_08ls992pcujr","isExtra":true,"isNew":false,"operator":"TEMPORAL_RANGE","sqlExpression":null,"subject":"date_of_case_reporting"}],"annotation_layers":[],"color_scheme":"echarts5Colors","comparison_type":"values","dashboards":[2],"datasource":"109__table","extra_form_data":{},"forecastInterval":0.8,"forecastPeriods":10,"groupby":[],"legendOrientation":"top","legendType":"scroll","logAxis":false,"metrics":[{"aggregate":"COUNT_DISTINCT","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"case_id","description":null,"expression":null,"filterable":true,"groupby":true,"id":1026,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"TEXT","type_generic":1,"verbose_name":null,"warning_markdown":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":true,"label":"cases","optionName":"metric_qoxaj3h7o5d_l8ddaqhgu4q","sqlExpression":null}],"minorSplitLine":false,"only_total":true,"orientation":"vertical","rich_tooltip":true,"row_limit":10000,"show_empty_columns":true,"show_legend":true,"slice_id":669,"sort_series_type":"sum","stack":"Stack","time_grain_sqla":"P1D","tooltipTimeFormat":"smart_date","truncateXAxis":true,"truncateYAxis":false,"truncate_metric":true,"viz_type":"echarts_timeseries_bar","xAxisLabelRotation":45,"x_axis":{"datasourceWarning":false,"expressionType":"SQL","label":"age_group","sqlExpression":"CASE\n    WHEN
+  age_group = ''<15 years'' THEN ''0 - 15 years''\n    ELSE age_group\nEND"},"x_axis_time_format":"smart_date","x_axis_title":"","x_axis_title_margin":15,"y_axis_bounds":[null,null],"y_axis_format":"SMART_NUMBER","y_axis_title":"","y_axis_title_margin":15,"y_axis_title_position":"Left","force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: ef9fc720-a048-429f-b648-d8c7cd76ee2b
+version: 1.0.0
+dataset_uuid: e15357ae-9bd0-4318-8e14-418763354e87
