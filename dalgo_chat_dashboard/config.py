@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from typing import Optional
 from pydantic import BaseModel
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -47,8 +48,15 @@ class Config(BaseModel):
                 pass
             return os.getenv(key, default)
         
+        # Resolve base directory (repo root relative to this file)
+        base_dir = Path(__file__).resolve().parent
+
         # NGO context folder (NEW approach)
-        ngo_context = get_config_value("NGO_CONTEXT_FOLDER", "../bhumi_context")
+        ngo_context_raw = get_config_value("NGO_CONTEXT_FOLDER", "../bhumi_context")
+        ngo_context_path = Path(ngo_context_raw)
+        if not ngo_context_path.is_absolute():
+            ngo_context_path = (base_dir / ngo_context_path).resolve()
+        ngo_context = str(ngo_context_path)
         
         pg_port_env = get_config_value("LOCAL_TUNNEL_PORT", get_config_value("PG_PORT", "5432"))
 
@@ -62,10 +70,10 @@ class Config(BaseModel):
             
             # NGO Context paths (auto-constructed)
             ngo_context_folder=ngo_context,
-            charts_json_path=os.path.join(ngo_context, "dashboard_json", "charts.json"),
-            dbt_manifest_path=os.path.join(ngo_context, "bhumi_dbt", "manifest.json"),
-            dbt_catalog_path=os.path.join(ngo_context, "bhumi_dbt", "catalog.json"),
-            context_file_path=os.path.join(ngo_context, "BHUMI_Programs_Context.md"),
+            charts_json_path=str(ngo_context_path / "dashboard_json" / "charts.json"),
+            dbt_manifest_path=str(ngo_context_path / "bhumi_dbt" / "manifest.json"),
+            dbt_catalog_path=str(ngo_context_path / "bhumi_dbt" / "catalog.json"),
+            context_file_path=str(ngo_context_path / "BHUMI_Programs_Context.md"),
             
             # Legacy (fallback to old paths if NGO context not available)
             superset_export_dir=get_config_value("SUPERSET_EXPORT_DIR", "../deprecated_shofco_context"),
