@@ -2,6 +2,7 @@ streamlit==1.39.0
 langchain==0.2.16
 langchain-openai==0.1.25
 langchain-community==0.2.17
+langgraph==0.2.76
 psycopg2-binary==2.9.9
 chromadb==0.5.23
 pydantic==2.9.2

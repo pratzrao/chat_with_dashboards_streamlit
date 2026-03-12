@@ -1,13 +1,15 @@
 import re
 import logging
-from typing import List
+from typing import List, Optional
 from agents.models import SqlValidationResult
 from config import config
 
 logger = logging.getLogger(__name__)
 
 class SqlGuard:
-    def __init__(self):
+    def __init__(self, dashboard_allowlist=None):
+        self.dashboard_allowlist = dashboard_allowlist
+        
         # Forbidden keywords that could modify data or structure
         self.forbidden_keywords = {
             'INSERT', 'UPDATE', 'DELETE', 'DROP', 'ALTER', 'CREATE', 'TRUNCATE',
@@ -83,6 +85,13 @@ class SqlGuard:
             if re.search(pattern, sql, re.IGNORECASE):
                 errors.append(f"Forbidden schema detected. Only use: prod, dev_prod, staging, intermediate")
         
+        # 9. Check dashboard allowlist for table access
+        if self.dashboard_allowlist:
+            tables_in_query = self._extract_table_names(sql)
+            for table in tables_in_query:
+                if not self.dashboard_allowlist.is_allowed(table):
+                    errors.append(f"Table '{table}' is not accessible in the current dashboard context")
+        
         is_valid = len(errors) == 0
         
         return SqlValidationResult(
@@ -107,4 +116,35 @@ class SqlGuard:
             # Take only the first statement
             sanitized = sanitized.split(';')[0]
         
-        return sanitized.strip()
+        return sanitized
+    
+    def _extract_table_names(self, sql: str) -> List[str]:
+        """Extract table names from SQL query"""
+        tables = []
+        
+        # Remove comments and normalize whitespace
+        sql_clean = re.sub(r'/\*.*?\*/', '', sql, flags=re.DOTALL)
+        sql_clean = re.sub(r'--.*', '', sql_clean)
+        sql_clean = ' '.join(sql_clean.split())
+        
+        # Patterns to match table references
+        patterns = [
+            # FROM schema.table
+            r'\bFROM\s+([a-zA-Z_][a-zA-Z0-9_]*\.[a-zA-Z_][a-zA-Z0-9_]*)',
+            # FROM table (without schema)
+            r'\bFROM\s+([a-zA-Z_][a-zA-Z0-9_]*)\b',
+            # JOIN schema.table
+            r'\bJOIN\s+([a-zA-Z_][a-zA-Z0-9_]*\.[a-zA-Z_][a-zA-Z0-9_]*)',
+            # JOIN table (without schema)  
+            r'\bJOIN\s+([a-zA-Z_][a-zA-Z0-9_]*)\b',
+        ]
+        
+        for pattern in patterns:
+            matches = re.finditer(pattern, sql_clean, re.IGNORECASE)
+            for match in matches:
+                table = match.group(1)
+                # Skip SQL keywords that might be matched
+                if table.upper() not in self.forbidden_keywords and table.upper() not in ['SELECT', 'WHERE', 'ORDER', 'BY', 'GROUP', 'HAVING', 'LIMIT', 'OFFSET', 'AS', 'ON', 'INNER', 'LEFT', 'RIGHT', 'FULL', 'OUTER', 'CROSS']:
+                    tables.append(table)
+        
+        return list(set(tables))  # Remove duplicates
