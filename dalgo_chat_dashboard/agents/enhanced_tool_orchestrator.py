@@ -2,7 +2,7 @@ import json
 import uuid
 import logging
 import re
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, TypedDict
 
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import (
@@ -14,6 +14,7 @@ from langchain_core.messages import (
 from langchain_core.messages.tool import ToolCall
 from types import SimpleNamespace
 from openai import OpenAI
+from langgraph.graph import StateGraph, START, END
 
 from agents.models import AgentResponse, ConversationContext
 from agents.enhanced_router import EnhancedIntentRouter
@@ -22,6 +23,9 @@ from agents.sql_guard import SqlGuard
 from db.postgres import PostgresExecutor, SchemaIndex
 from db.dbt_helpers import DbtHelper
 from retrieval.vectorstore import VectorStore
+from retrieval.dashboard_allowlist import DashboardTableAllowlist
+from retrieval.multi_context_loader import MultiContextLoader
+from agents.dashboard_relevance_detector import DashboardRelevanceDetector
 from config import config
 
 logger = logging.getLogger(__name__)
@@ -42,16 +46,18 @@ class EnhancedToolOrchestrator:
         vectorstore: VectorStore,
         schema_index: SchemaIndex,
         postgres_executor: PostgresExecutor,
-        human_context_path: str,
+        ngo_context_folder: str,
         dbt_helper: Optional[DbtHelper] = None,
     ):
         self.vectorstore = vectorstore
         self.schema_index = schema_index
         self.postgres = postgres_executor
-        self.sql_guard = SqlGuard()
         self.dbt_helper = dbt_helper
         self.router = EnhancedIntentRouter()
         self.conversation_manager = ConversationManager()
+        self.dashboard_allowlist = DashboardTableAllowlist(dbt_helper=dbt_helper)
+        self.sql_guard = SqlGuard(dashboard_allowlist=self.dashboard_allowlist)
+        self.relevance_detector = DashboardRelevanceDetector()
         self.capabilities_prompt = (
             "You are a helpful assistant for program data questions. "
             "Briefly explain what you can do: retrieve dashboard/chart/dbt context, "
@@ -59,13 +65,17 @@ class EnhancedToolOrchestrator:
             "Keep answers concise, friendly, and non-technical when possible."
         )
         
-        # Load human context
+        # Initialize multi-context system
         try:
-            with open(human_context_path, "r") as f:
-                self.human_context = f.read()
+            self.multi_context_loader = MultiContextLoader(ngo_context_folder)
+            # Load initial context (org-only until dashboard is selected)
+            self.human_context = self.multi_context_loader.get_context_for_dashboard(None)
+            self.current_context = self.human_context
+            logger.info("Multi-context system initialized successfully")
         except Exception as e:
-            logger.warning(f"Could not load human context file {human_context_path}: {e}")
+            logger.warning(f"Could not load multi-context system from {ngo_context_folder}: {e}")
             self.human_context = "Context file missing."
+            self.current_context = self.human_context
         
         # Tool registry for OpenAI function calling
         self.tools = [
@@ -211,6 +221,95 @@ class EnhancedToolOrchestrator:
         # Auto/required bindings (kept for legacy small-talk path)
         self.llm_with_tools_auto = self.llm.bind_tools(self.tools, tool_choice="auto")
         self.llm_with_tools_required = self.llm.bind_tools(self.tools, tool_choice="required")
+
+        # Build LangGraph to drive the flow
+        self.graph = self._build_langgraph()
+
+    # ---------- LangGraph setup ----------
+
+    class _State(TypedDict, total=False):
+        user_query: str
+        conversation_history: List[Dict[str, str]]
+        selected_dashboard_id: Optional[str]
+        allow_retrieval: bool
+        conv_context: ConversationContext
+        intent_response: Any
+        agent_response: AgentResponse
+
+    def _build_langgraph(self):
+        g = StateGraph(self._State)
+
+        g.add_node("init_context", self._node_init_context)
+        g.add_node("route_intent", self._node_route_intent)
+        g.add_node("simple_intent", self._node_simple_intent)
+        g.add_node("follow_up", self._node_follow_up)
+        g.add_node("new_query", self._node_new_query)
+
+        g.add_edge(START, "init_context")
+        g.add_edge("init_context", "route_intent")
+
+        def _route_after_intent(state: "EnhancedToolOrchestrator._State") -> str:
+            intent = state["intent_response"].intent
+            if intent in ["small_talk", "irrelevant", "needs_clarification"]:
+                return "simple_intent"
+            if intent in ["follow_up_sql", "follow_up_context"]:
+                return "follow_up"
+            return "new_query"
+
+        g.add_conditional_edges("route_intent", _route_after_intent, {
+            "simple_intent": "simple_intent",
+            "follow_up": "follow_up",
+            "new_query": "new_query",
+        })
+
+        g.add_edge("simple_intent", END)
+        g.add_edge("follow_up", END)
+        g.add_edge("new_query", END)
+
+        return g.compile()
+
+    # ---------- LangGraph nodes ----------
+
+    def _node_init_context(self, state: _State) -> _State:
+        """Align allowlist/context based on selected dashboard."""
+        selected_dashboard_id = state.get("selected_dashboard_id")
+        self.selected_dashboard_id = selected_dashboard_id
+        self._update_dashboard_allowlist(selected_dashboard_id)
+        self._update_dashboard_context(selected_dashboard_id)
+        self._update_relevance_detector_context()
+        return state
+
+    def _node_route_intent(self, state: _State) -> _State:
+        conv_context = self.conversation_manager.extract_conversation_context(state.get("conversation_history") or [])
+        intent_response = self.router.classify_intent(state["user_query"], state.get("conversation_history"))
+        state["conv_context"] = conv_context
+        state["intent_response"] = intent_response
+        return state
+
+    def _node_simple_intent(self, state: _State) -> _State:
+        intent_response = state["intent_response"]
+        state["agent_response"] = self._handle_simple_intent(intent_response, state["user_query"])
+        return state
+
+    def _node_follow_up(self, state: _State) -> _State:
+        intent_response = state["intent_response"]
+        conv_context = state["conv_context"]
+        state["agent_response"] = self._handle_follow_up_query(
+            state["user_query"],
+            intent_response,
+            conv_context,
+            state.get("allow_retrieval", True),
+        )
+        return state
+
+    def _node_new_query(self, state: _State) -> _State:
+        intent_response = state["intent_response"]
+        state["agent_response"] = self._handle_new_query(
+            state["user_query"],
+            intent_response,
+            state.get("allow_retrieval", True),
+        )
+        return state
     
     def process_query(
         self,
@@ -219,27 +318,15 @@ class EnhancedToolOrchestrator:
         conversation_history: Optional[List[Dict[str, str]]] = None,
         selected_dashboard_id: Optional[str] = None,
     ) -> AgentResponse:
-        """Process user query with enhanced tool orchestration"""
-        
-        # Store selected dashboard for retrieval filtering
-        self.selected_dashboard_id = selected_dashboard_id
-        
-        # Step 1: Extract conversation context
-        conv_context = self.conversation_manager.extract_conversation_context(conversation_history or [])
-        
-        # Step 2: Classify intent with conversation context
-        intent_response = self.router.classify_intent(user_query, conversation_history)
-        
-        # Step 2: Handle simple intents without tools
-        if intent_response.intent in ["small_talk", "irrelevant", "needs_clarification"]:
-            return self._handle_simple_intent(intent_response, user_query)
-        
-        # Step 3: Handle follow-up queries with context reuse
-        if intent_response.intent in ["follow_up_sql", "follow_up_context"]:
-            return self._handle_follow_up_query(user_query, intent_response, conv_context, allow_retrieval)
-        
-        # Step 4: Handle new queries with tools
-        return self._handle_new_query(user_query, intent_response, allow_retrieval)
+        """Process user query via LangGraph (functionality preserved)."""
+        initial_state: EnhancedToolOrchestrator._State = {
+            "user_query": user_query,
+            "allow_retrieval": allow_retrieval,
+            "conversation_history": conversation_history or [],
+            "selected_dashboard_id": selected_dashboard_id,
+        }
+        final_state = self.graph.invoke(initial_state)
+        return final_state["agent_response"]
     
     def _handle_simple_intent(self, intent_response, user_query: str) -> AgentResponse:
         """Handle intents that don't require tools"""
@@ -279,7 +366,7 @@ class EnhancedToolOrchestrator:
             {"role": "user", "content": user_query},
         ]
 
-        return self._execute_tool_loop(messages, intent_response, max_turns=6)
+        return self._execute_tool_loop(messages, intent_response, max_turns=6, user_query=user_query)
     
     def _handle_new_query(self, user_query: str, intent_response, allow_retrieval: bool) -> AgentResponse:
         """Handle new queries (not follow-ups)"""
@@ -293,9 +380,9 @@ class EnhancedToolOrchestrator:
             {"role": "user", "content": user_query},
         ]
         
-        return self._execute_tool_loop(messages, intent_response, max_turns=15)
+        return self._execute_tool_loop(messages, intent_response, max_turns=15, user_query=user_query)
 
-    def _execute_tool_loop(self, messages: List[Dict[str, Any]], intent_response, max_turns: int) -> AgentResponse:
+    def _execute_tool_loop(self, messages: List[Dict[str, Any]], intent_response, max_turns: int, user_query: str = "") -> AgentResponse:
         """Execute tool loop using raw OpenAI chat completions."""
         tool_trace = []
         retrieved_ids = []
@@ -398,8 +485,20 @@ class EnhancedToolOrchestrator:
                 }
             )
 
+        # Analyze why no results were found and provide intelligent error message
+        no_results_context = {
+            "tables_found": len([call for call in tool_trace if call.get('tool') == 'list_tables_by_keyword']),
+            "vector_results": len([call for call in tool_trace if call.get('tool') == 'retrieve_docs']),
+            "tool_calls": len(tool_trace),
+            "sql_attempts": len([call for call in tool_trace if call.get('tool') == 'run_sql_query']),
+            "max_turns_reached": True
+        }
+        
+        # Use the passed user query for intelligent error messaging
+        intelligent_error_result = self._handle_no_results_intelligently(user_query, no_results_context)
+
         return AgentResponse(
-            response_text="I'm sorry, I couldn't get enough data to answer this. Please simplify or restate your question.",
+            response_text=intelligent_error_result["error_message"],
             sql_used=last_sql,
             sources_used=retrieved_ids,
             chart_ids_used=[],
@@ -409,7 +508,9 @@ class EnhancedToolOrchestrator:
                 "tool_calls": tool_trace,
                 "turns": max_turns,
                 "max_turns_reached": True,
-                "sql_result": last_sql_result
+                "sql_result": last_sql_result,
+                "no_results_context": no_results_context,
+                "intelligent_error": intelligent_error_result
             }
         )
 
@@ -536,7 +637,30 @@ class EnhancedToolOrchestrator:
                 filter_metadata=filter_meta
             )
             logger.info(f"Retrieved {len(results)} {doc_type} docs with filter {filter_meta}")
-            docs.extend(results)
+            
+            # Apply allowlist filtering for dbt_model documents
+            if doc_type == "dbt_model" and hasattr(self, 'dashboard_allowlist'):
+                filtered_results = []
+                for result in results:
+                    # Extract table name from dbt model metadata
+                    metadata = result.get("metadata", {})
+                    dbt_model = metadata.get("dbt_model", "")
+                    schema = metadata.get("schema", "")
+                    
+                    if schema and dbt_model:
+                        table_name = f"{schema}.{dbt_model}"
+                        if self.dashboard_allowlist.is_allowed(table_name):
+                            filtered_results.append(result)
+                        else:
+                            logger.debug(f"DBT model {table_name} filtered out by dashboard allowlist")
+                    else:
+                        # Include if no clear table mapping
+                        filtered_results.append(result)
+                
+                logger.info(f"Dashboard allowlist filtered {len(results)} -> {len(filtered_results)} dbt_model docs")
+                docs.extend(filtered_results)
+            else:
+                docs.extend(results)
 
         # If returned docs types don't overlap requested types (or nothing found), retry once with all types
         returned_types = { (d.get("metadata") or {}).get("type") for d in docs }
@@ -561,13 +685,45 @@ class EnhancedToolOrchestrator:
                     n_results=limit,
                     filter_metadata=filter_meta
                 )
-                docs.extend(results)
+                
+                # Apply allowlist filtering for dbt_model documents in retry as well
+                if doc_type == "dbt_model" and hasattr(self, 'dashboard_allowlist'):
+                    filtered_results = []
+                    for result in results:
+                        # Extract table name from dbt model metadata
+                        metadata = result.get("metadata", {})
+                        dbt_model = metadata.get("dbt_model", "")
+                        schema = metadata.get("schema", "")
+                        
+                        if schema and dbt_model:
+                            table_name = f"{schema}.{dbt_model}"
+                            if self.dashboard_allowlist.is_allowed(table_name):
+                                filtered_results.append(result)
+                            else:
+                                logger.debug(f"DBT model {table_name} filtered out by dashboard allowlist (retry)")
+                        else:
+                            # Include if no clear table mapping
+                            filtered_results.append(result)
+                    
+                    docs.extend(filtered_results)
+                else:
+                    docs.extend(results)
 
         # Auto-enrich with dbt model hits for the same query (gives LLM real tables)
+        # Filter by dashboard allowlist
         dbt_models = []
         if self.dbt_helper:
             try:
-                dbt_models = self.dbt_helper.find_models(query)[:limit]
+                all_models = self.dbt_helper.find_models(query)
+                # Filter models by allowlist
+                for model in all_models:
+                    table_name = f"{model.schema}.{model.name}"
+                    if self.dashboard_allowlist.is_allowed(table_name):
+                        dbt_models.append(model)
+                    else:
+                        logger.debug(f"DBT model {table_name} filtered out by dashboard allowlist in retrieve_docs")
+                # Apply limit after filtering
+                dbt_models = dbt_models[:limit]
             except Exception:
                 dbt_models = []
         for m in dbt_models:
@@ -585,15 +741,51 @@ class EnhancedToolOrchestrator:
                 "rank": 0
             })
 
-        return {"docs": docs, "count": len(docs)}
+        # Post-process vector store results to filter dbt_model documents by allowlist
+        filtered_docs = []
+        filtered_count = 0
+        
+        for doc in docs:
+            doc_type = doc.get("metadata", {}).get("type")
+            if doc_type == "dbt_model":
+                # Check if this dbt model is allowed
+                schema = doc.get("metadata", {}).get("schema", "")
+                model_name = doc.get("metadata", {}).get("dbt_model", "")
+                table_name = f"{schema}.{model_name}" if schema and model_name else model_name
+                
+                if self.dashboard_allowlist.is_allowed(table_name):
+                    filtered_docs.append(doc)
+                else:
+                    filtered_count += 1
+                    logger.debug(f"Vector store dbt_model {table_name} filtered out by dashboard allowlist")
+            else:
+                # Non-dbt documents pass through (charts already filtered by dashboard_id)
+                filtered_docs.append(doc)
+        
+        logger.info(f"Retrieved {len(filtered_docs)} docs after allowlist filtering ({filtered_count} dbt models filtered)")
+        return {"docs": filtered_docs, "count": len(filtered_docs)}
     
     def _tool_get_schema_snippets(self, args: Dict[str, Any]) -> Dict[str, Any]:
         """Get table column information"""
         tables = args.get("tables", [])
         
+        # Filter tables by allowlist
+        allowed_tables = []
+        filtered_tables = []
+        
+        for table in tables:
+            if self.dashboard_allowlist.is_allowed(table):
+                allowed_tables.append(table)
+            else:
+                filtered_tables.append(table)
+                logger.debug(f"Table {table} filtered out by dashboard allowlist")
+        
+        if filtered_tables:
+            logger.info(f"Filtered {len(filtered_tables)} tables by dashboard allowlist: {filtered_tables}")
+        
         # Prefer prod schemas when duplicates exist
         preferred: Dict[str, Dict[str, Any]] = {}
-        for table in tables:
+        for table in allowed_tables:
             # Auto-upgrade to prod schema if available
             base = table.split(".", 1)[1] if "." in table else table
             prod_candidate = f"prod.{base}"
@@ -636,6 +828,11 @@ class EnhancedToolOrchestrator:
         snippets.sort(key=lambda s: len(s.get("columns", [])), reverse=True)
         
         result = {"tables": snippets}
+        
+        # Add information about filtered tables
+        if filtered_tables:
+            result["filtered_tables"] = filtered_tables
+            result["filter_note"] = f"{len(filtered_tables)} tables were filtered out because they are not used by the current dashboard"
 
         return result
 
@@ -650,9 +847,15 @@ class EnhancedToolOrchestrator:
         clean_matches = []  # Prioritize clean schemas
         
         for tbl in self.schema_index.list_tables():
-            # ONLY include prod, intermediate, and staging schemas (no dev_ prefixes)
+            # Include production-ready schemas
             schema = tbl.split('.')[0].lower()
-            if schema not in ['prod', 'staging', 'intermediate'] or schema.startswith('dev_'):
+            allowed_schemas = ['prod', 'staging', 'intermediate', 'dev_prod', 'dev_intermediate']
+            if schema not in allowed_schemas:
+                continue
+            
+            # Check dashboard allowlist
+            if not self.dashboard_allowlist.is_allowed(tbl):
+                logger.debug(f"Table {tbl} filtered out by dashboard allowlist")
                 continue
                 
             cols = self.schema_index.get_table_columns(tbl)
@@ -669,15 +872,32 @@ class EnhancedToolOrchestrator:
         if all_tables:
             return {
                 "tables": all_tables,
-                "hint": f"Found {len(all_tables)} tables. Check columns with get_schema_snippets before assuming table structure."
+                "hint": f"Found {len(all_tables)} tables (filtered by current dashboard). Check columns with get_schema_snippets before assuming table structure."
             }
-        return {"tables": [], "hint": "No tables found. Try broader keywords."}
+        
+        # If no tables found, provide helpful message about dashboard filtering
+        allowlist_summary = self.dashboard_allowlist.get_summary()
+        if allowlist_summary["total_allowed"] > 0:
+            return {
+                "tables": [], 
+                "hint": f"No tables matching '{keyword}' found in current dashboard scope. Dashboard allows {allowlist_summary['total_allowed']} tables. Try broader keywords or check if the table is used by the current dashboard."
+            }
+        else:
+            return {"tables": [], "hint": "No tables found. Try broader keywords."}
     
     def _tool_check_table_row_count(self, args: Dict[str, Any]) -> Dict[str, Any]:
         """Check if a table has data by counting rows"""
         table = args.get("table", "")
         if not table:
             return {"error": "Table name required"}
+        
+        # Check allowlist
+        if not self.dashboard_allowlist.is_allowed(table):
+            return {
+                "error": "table_not_allowed", 
+                "table": table,
+                "message": f"Table {table} is not accessible in the current dashboard context. Use list_tables_by_keyword to find available tables."
+            }
         
         try:
             sql = f"SELECT COUNT(*) as row_count FROM {table} LIMIT 1"
@@ -701,10 +921,22 @@ class EnhancedToolOrchestrator:
         limit = args.get("limit", 8)
         
         # Search all models, not just prod_gender
-        models = self.dbt_helper.find_models(query)[:limit]
+        models = self.dbt_helper.find_models(query)
+        
+        # Filter models by allowlist
+        allowed_models = []
+        for model in models:
+            table_name = f"{model.schema}.{model.name}"
+            if self.dashboard_allowlist.is_allowed(table_name):
+                allowed_models.append(model)
+            else:
+                logger.debug(f"DBT model {table_name} filtered out by dashboard allowlist")
+        
+        # Apply limit after filtering
+        allowed_models = allowed_models[:limit]
         
         results = []
-        for model in models:
+        for model in allowed_models:
             results.append({
                 "name": model.name,
                 "schema": model.schema,
@@ -713,7 +945,11 @@ class EnhancedToolOrchestrator:
                 "columns": [c.name for c in (model.columns or [])][:20]
             })
             
-        return {"models": results, "count": len(results)}
+        return {
+            "models": results, 
+            "count": len(results),
+            "note": f"Results filtered by current dashboard scope. {len(results)} of {len(models)} models shown."
+        }
     
     def _tool_get_dbt_model_info(self, args: Dict[str, Any]) -> Dict[str, Any]:
         """Get detailed dbt model information"""
@@ -757,6 +993,14 @@ class EnhancedToolOrchestrator:
         table = args.get("table", "")
         column = args.get("column", "")
         limit = args.get("limit", 50)
+        
+        # Check allowlist
+        if not self.dashboard_allowlist.is_allowed(table):
+            return {
+                "error": "table_not_allowed", 
+                "table": table,
+                "message": f"Table {table} is not accessible in the current dashboard context. Use list_tables_by_keyword to find available tables."
+            }
         
         try:
             values = self.postgres.get_distinct_values(table, column, limit)
@@ -804,6 +1048,15 @@ class EnhancedToolOrchestrator:
         """Ensure distinct values were fetched for string filters; if missing, signal the LLM to fetch then retry."""
         sql = args.get("sql", "") or ""
 
+        # Check allowlist validation first
+        allowlist_validation = self._validate_sql_allowlist(sql)
+        if not allowlist_validation["valid"]:
+            return {
+                "error": "table_not_allowed",
+                "invalid_tables": allowlist_validation["invalid_tables"],
+                "message": allowlist_validation["message"]
+            }
+
         # If referenced table does not exist, suggest using list_tables_by_keyword to find it
         import re
         table_match = re.search(r"FROM\s+([`\"]?)([\w\.]+)\1", sql, re.IGNORECASE)
@@ -829,6 +1082,83 @@ class EnhancedToolOrchestrator:
                 "message": "Call get_distinct_values for these columns, then regenerate the SQL using one of the returned values."
             }
         return self._tool_run_sql_query(args)
+    
+    def _handle_no_results_intelligently(self, user_query: str, no_results_context: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate intelligent error message when no results are found"""
+        try:
+            relevance_result = self.relevance_detector.analyze_query_relevance(
+                query=user_query,
+                current_dashboard_id=self.selected_dashboard_id,
+                no_results_context=no_results_context
+            )
+            
+            logger.info(f"Relevance analysis: {relevance_result.failure_reason} (confidence: {relevance_result.confidence:.2f})")
+            
+            # Get dashboard suggestions if relevant
+            dashboard_suggestions = []
+            if relevance_result.failure_reason == "cross_dashboard_question":
+                suggestions = self.relevance_detector.get_dashboard_suggestions(user_query)
+                dashboard_suggestions = suggestions[:2]  # Top 2 suggestions
+            
+            return {
+                "error_message": relevance_result.suggested_action,
+                "failure_reason": relevance_result.failure_reason,
+                "confidence": relevance_result.confidence,
+                "dashboard_suggestions": dashboard_suggestions,
+                "extracted_keywords": relevance_result.extracted_keywords
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in relevance detection: {e}")
+            # Fallback to generic message
+            return {
+                "error_message": "I couldn't find relevant data for your question. Please try rephrasing or check if you're viewing the correct dashboard.",
+                "failure_reason": "unknown_error",
+                "confidence": 0.0,
+                "dashboard_suggestions": [],
+                "extracted_keywords": []
+            }
+    
+    def _validate_sql_allowlist(self, sql: str) -> Dict[str, Any]:
+        """Validate that all tables in SQL are allowed by dashboard allowlist"""
+        import re
+        
+        # Extract table references from SQL
+        # Look for FROM and JOIN patterns
+        table_patterns = [
+            r"FROM\s+([`\"]?)([\w\.]+)\1",  # FROM table
+            r"JOIN\s+([`\"]?)([\w\.]+)\1",  # JOIN table
+            r"INTO\s+([`\"]?)([\w\.]+)\1",  # INSERT INTO (shouldn't happen but safety)
+            r"UPDATE\s+([`\"]?)([\w\.]+)\1"  # UPDATE (shouldn't happen but safety)
+        ]
+        
+        referenced_tables = set()
+        for pattern in table_patterns:
+            matches = re.finditer(pattern, sql, re.IGNORECASE)
+            for match in matches:
+                table_name = match.group(2)
+                referenced_tables.add(table_name)
+        
+        # Check each table against allowlist
+        invalid_tables = []
+        for table in referenced_tables:
+            if not self.dashboard_allowlist.is_allowed(table):
+                invalid_tables.append(table)
+        
+        if invalid_tables:
+            allowlist_summary = self.dashboard_allowlist.get_summary()
+            message = (
+                f"SQL references tables not available in current dashboard: {', '.join(invalid_tables)}. "
+                f"Current dashboard allows {allowlist_summary['total_allowed']} tables. "
+                f"Use list_tables_by_keyword to find available tables."
+            )
+            return {
+                "valid": False,
+                "invalid_tables": invalid_tables,
+                "message": message
+            }
+        
+        return {"valid": True, "invalid_tables": [], "message": ""}
 
     def _rewrite_sql_for_missing_columns(self, sql: str) -> str:
         """If referenced columns are missing in the chosen table, swap to a table that has them."""
@@ -992,6 +1322,7 @@ IMPORTANT RULES:
 12. If a requested geographic/location field is missing, choose the most specific available location dimension (e.g., city → chapter → school) and answer using that, explicitly noting the substitution in the response.
 13. When someone asks for "changes" in metrics, look for increases and decreases by comparing values across time periods (baseline vs midline vs endline) or comparing current vs previous periods.
 14. ONLY use these exact schemas: prod, dev_prod, staging, intermediate. NEVER use dev_staging, airbyte_internal, or any other dev_ prefixed schemas. Charts will guide you to the right tables.
+15. IMPORTANT: Only tables relevant to the current dashboard are accessible. If a table is not found, it may not be relevant to this dashboard. Use charts from the current dashboard to guide your analysis.
 
 Available tools:
 - retrieve_docs: Find relevant charts, datasets, context, or dbt models
@@ -1049,3 +1380,139 @@ Human context:
         except Exception as e:
             logger.warning(f"Small talk generation failed, using fallback: {e}")
             return "Hi! I can help with your program data and metrics. What would you like to know?"
+    
+    def _update_dashboard_context(self, dashboard_id: Optional[str]):
+        """Update the human context based on selected dashboard"""
+        try:
+            # Load context specific to the dashboard
+            self.current_context = self.multi_context_loader.get_context_for_dashboard(dashboard_id)
+            self.human_context = self.current_context
+            
+            if dashboard_id:
+                logger.info(f"Updated context for dashboard: {dashboard_id}")
+            else:
+                logger.info("Updated to org-only context (no dashboard selected)")
+                
+        except Exception as e:
+            logger.error(f"Error updating dashboard context: {e}")
+            # Fallback to org context only
+            try:
+                contexts = self.multi_context_loader.load_all_contexts()
+                self.human_context = contexts.org_context
+            except Exception as fallback_error:
+                logger.error(f"Fallback context loading failed: {fallback_error}")
+                self.human_context = "Context loading failed."
+    
+    def _update_relevance_detector_context(self):
+        """Update the relevance detector with current dashboard context"""
+        try:
+            if hasattr(self, 'relevance_detector') and self.relevance_detector:
+                # Get all dashboard contexts for the relevance detector
+                contexts = self.multi_context_loader.load_all_contexts()
+                dashboard_contexts = {}
+                for dashboard_id, context_content in contexts.dashboard_contexts.items():
+                    dashboard_contexts[dashboard_id] = context_content
+                
+                # Update the relevance detector with all dashboard contexts
+                if hasattr(self.relevance_detector, 'update_dashboard_contexts'):
+                    self.relevance_detector.update_dashboard_contexts(dashboard_contexts)
+                    logger.debug("Updated relevance detector with dashboard contexts")
+        except Exception as e:
+            logger.warning(f"Could not update relevance detector context: {e}")
+    
+    def _update_dashboard_allowlist(self, dashboard_id: Optional[str]):
+        """Update the allowlist based on the selected dashboard"""
+        if not dashboard_id or not self.dbt_helper:
+            # No dashboard selected or no DBT helper available
+            self.dashboard_allowlist = DashboardTableAllowlist(dbt_helper=self.dbt_helper)
+            self.sql_guard = SqlGuard(dashboard_allowlist=self.dashboard_allowlist)
+            logger.info("No dashboard allowlist restrictions - all tables accessible")
+            return
+        
+        try:
+            # Get dashboard charts from vectorstore metadata
+            dashboard_charts = self._get_dashboard_charts(dashboard_id)
+            if dashboard_charts:
+                self.dashboard_allowlist.update_for_dashboard(dashboard_charts)
+                summary = self.dashboard_allowlist.get_summary()
+                logger.info(f"Updated dashboard allowlist for {dashboard_id}: {summary}")
+            else:
+                logger.warning(f"No charts found for dashboard {dashboard_id}")
+                
+        except Exception as e:
+            logger.error(f"Failed to update dashboard allowlist: {e}")
+            # Fallback to no restrictions
+            self.dashboard_allowlist = DashboardTableAllowlist(dbt_helper=self.dbt_helper)
+        
+        # Update SQL guard with new allowlist
+        self.sql_guard = SqlGuard(dashboard_allowlist=self.dashboard_allowlist)
+    
+    def _get_dashboard_charts(self, dashboard_id: str) -> List:
+        """Get charts for a specific dashboard from vectorstore"""
+        try:
+            # Import here to avoid circular imports
+            from retrieval.bhumi_parser import BhumiChart
+            
+            # Query vectorstore for charts belonging to this dashboard
+            filter_meta = {
+                "$and": [
+                    {"type": {"$eq": "chart"}},
+                    {"dashboard_id": {"$eq": dashboard_id}}
+                ]
+            }
+            
+            chart_docs = self.vectorstore.retrieve(
+                query="dashboard charts", 
+                n_results=50, 
+                filter_metadata=filter_meta
+            )
+            
+            # Convert retrieved docs back to BhumiChart objects
+            charts = []
+            for doc in chart_docs:
+                metadata = doc.get('metadata', {})
+                if 'data_source' in doc.get('content', ''):
+                    # Extract chart info from content
+                    content = doc.get('content', '')
+                    lines = content.split('\n')
+                    
+                    # Parse chart details from content
+                    chart_data = {
+                        'chart_id': metadata.get('chart_id', ''),
+                        'title': '',
+                        'chart_type': '',
+                        'chart_type_description': '',
+                        'data_source': '',
+                        'metric_calculation': '',
+                        'filters': [],
+                        'measures': [],
+                        'dimensions': [],
+                        'grain': ''
+                    }
+                    
+                    for line in lines:
+                        if line.startswith('Chart: '):
+                            chart_data['title'] = line.replace('Chart: ', '')
+                        elif line.startswith('Data Source: '):
+                            chart_data['data_source'] = line.replace('Data Source: ', '')
+                        elif line.startswith('Type: '):
+                            type_info = line.replace('Type: ', '')
+                            if '(' in type_info:
+                                chart_data['chart_type'] = type_info.split('(')[0].strip()
+                                chart_data['chart_type_description'] = type_info.split('(')[1].rstrip(')')
+                        elif line.startswith('Metric Calculation: '):
+                            chart_data['metric_calculation'] = line.replace('Metric Calculation: ', '')
+                        elif line.startswith('Aggregation Level: '):
+                            chart_data['grain'] = line.replace('Aggregation Level: ', '')
+                    
+                    # Create BhumiChart object
+                    if chart_data['data_source']:  # Only include if we have a data source
+                        chart = BhumiChart(**chart_data)
+                        charts.append(chart)
+            
+            logger.info(f"Retrieved {len(charts)} charts for dashboard {dashboard_id}")
+            return charts
+            
+        except Exception as e:
+            logger.error(f"Error retrieving dashboard charts: {e}")
+            return []

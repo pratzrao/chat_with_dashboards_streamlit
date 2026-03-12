@@ -73,7 +73,7 @@ class Config(BaseModel):
             charts_json_path=str(ngo_context_path / "dashboard_json" / "charts.json"),
             dbt_manifest_path=str(ngo_context_path / "bhumi_dbt" / "manifest.json"),
             dbt_catalog_path=str(ngo_context_path / "bhumi_dbt" / "catalog.json"),
-            context_file_path=str(ngo_context_path / "BHUMI_Programs_Context.md"),
+            context_file_path=str(ngo_context_path / "org_context.md"),
             
             # Legacy (fallback to old paths if NGO context not available)
             superset_export_dir=get_config_value("SUPERSET_EXPORT_DIR", "../deprecated_shofco_context"),

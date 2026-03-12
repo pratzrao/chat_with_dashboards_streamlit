@@ -19,6 +19,7 @@ from db.ssh_tunnel import create_tunnel
 from db.chat_logger import ChatLogger
 from agents.enhanced_tool_orchestrator import EnhancedToolOrchestrator
 from retrieval.enhanced_ingest import EnhancedDocumentIngester
+from ui.multi_context_editor import render_multi_context_editor
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -65,13 +66,22 @@ def initialize_app():
                         st.session_state.vectorstore,
                         st.session_state.schema_index,
                         st.session_state.postgres_executor,
-                        config.context_file_path,
+                        config.ngo_context_folder,
                         ingester.dbt_helper
                     )
+                    
+                    # Initialize with current dashboard if selected
+                    if hasattr(st.session_state, 'selected_dashboard_id') and st.session_state.selected_dashboard_id:
+                        st.session_state.orchestrator._update_dashboard_allowlist(st.session_state.selected_dashboard_id)
+                        st.session_state.orchestrator.selected_dashboard_id = st.session_state.selected_dashboard_id
                     
                     # Load dashboard context graph
                     st.session_state.dashboard_graph = ingester.get_dashboard_context_graph()
                     st.session_state.ngo_name = ingester.ngo_context.ngo_name
+                    
+                    # Update orchestrator with dashboard context for relevance detection
+                    st.session_state.orchestrator._dashboard_context_graph = st.session_state.dashboard_graph
+                    st.session_state.orchestrator._update_relevance_detector_context()
                     
                     # Initialize chat logger
                     st.session_state.chat_logger = ChatLogger(st.session_state.postgres_executor)
@@ -154,6 +164,10 @@ def render_sidebar():
             selected_dashboard_id = dashboard_options[selected_title]
             if selected_dashboard_id != st.session_state.selected_dashboard_id:
                 st.session_state.selected_dashboard_id = selected_dashboard_id
+                # Immediately update the orchestrator's allowlist for the new dashboard
+                if hasattr(st.session_state, 'orchestrator') and st.session_state.orchestrator:
+                    st.session_state.orchestrator._update_dashboard_allowlist(selected_dashboard_id)
+                    st.session_state.orchestrator.selected_dashboard_id = selected_dashboard_id
                 # Don't clear chat history - each dashboard will have its own
                 st.rerun()
             
@@ -202,6 +216,23 @@ def render_chat_interface():
             # Show additional info for assistant messages (ALWAYS show debug info)
             if message["role"] == "assistant" and "metadata" in message:
                 metadata = message["metadata"]
+                
+                # Show dashboard suggestions if available
+                if metadata.get("dashboard_suggestions"):
+                    suggestions = metadata["dashboard_suggestions"]
+                    failure_reason = metadata.get("failure_reason", "")
+                    
+                    if failure_reason == "cross_dashboard_question":
+                        with st.expander("💡 Dashboard Suggestions", expanded=False):
+                            st.write("This question might be better answered by switching to:")
+                            for suggestion in suggestions:
+                                col1, col2 = st.columns([3, 1])
+                                with col1:
+                                    st.write(f"**{suggestion['title']}** - {suggestion['description'][:80]}...")
+                                with col2:
+                                    if st.button(f"Switch", key=f"hist_switch_{i}_{suggestion['dashboard_id']}"):
+                                        st.session_state.selected_dashboard_id = suggestion['dashboard_id']
+                                        st.rerun()
                 
                 # Always show SQL queries as expandable section
                 if metadata.get("sql_used"):
@@ -286,6 +317,22 @@ def render_chat_interface():
                     if composed.get("table") is not None:
                         st.dataframe(composed["table"])
                     
+                    # Show dashboard suggestions if available
+                    if response.execution_info and response.execution_info.get("intelligent_error"):
+                        intelligent_error = response.execution_info["intelligent_error"]
+                        dashboard_suggestions = intelligent_error.get("dashboard_suggestions", [])
+                        
+                        if dashboard_suggestions:
+                            st.info("💡 **Suggested Dashboards:**")
+                            for suggestion in dashboard_suggestions:
+                                col1, col2 = st.columns([3, 1])
+                                with col1:
+                                    st.write(f"**{suggestion['title']}** - {suggestion['description'][:100]}...")
+                                with col2:
+                                    if st.button(f"Switch to {suggestion['title'][:10]}...", key=f"switch_{suggestion['dashboard_id']}"):
+                                        st.session_state.selected_dashboard_id = suggestion['dashboard_id']
+                                        st.rerun()
+                    
                     # Show SQL and debug info for current response
                     if response.sql_used:
                         with st.expander("SQL Query"):
@@ -321,12 +368,21 @@ def render_chat_interface():
                         "execution_info": response.execution_info
                     }
                     
-                    # Add assistant message to history
-                    st.session_state.chat_history.append({
+                    # Add assistant message to history (include dashboard suggestions)
+                    assistant_content = {
                         "role": "assistant", 
                         "content": composed["text"],
                         "metadata": metadata
-                    })
+                    }
+                    
+                    # Add dashboard suggestions to metadata if available
+                    if response.execution_info and response.execution_info.get("intelligent_error"):
+                        intelligent_error = response.execution_info["intelligent_error"]
+                        if intelligent_error.get("dashboard_suggestions"):
+                            assistant_content["metadata"]["dashboard_suggestions"] = intelligent_error["dashboard_suggestions"]
+                            assistant_content["metadata"]["failure_reason"] = intelligent_error.get("failure_reason")
+                    
+                    st.session_state.chat_history.append(assistant_content)
                     
                     # Save back to dashboard-specific chat store
                     current_dashboard = st.session_state.get('selected_dashboard_id')
@@ -487,9 +543,14 @@ def render_context_editor():
                             st.session_state.vectorstore,
                             st.session_state.schema_index,
                             st.session_state.postgres_executor,
-                            config.context_file_path,
+                            config.ngo_context_folder,
                             ingester.dbt_helper
                         )
+                        
+                        # Re-initialize with current dashboard if selected
+                        if hasattr(st.session_state, 'selected_dashboard_id') and st.session_state.selected_dashboard_id:
+                            st.session_state.orchestrator._update_dashboard_allowlist(st.session_state.selected_dashboard_id)
+                            st.session_state.orchestrator.selected_dashboard_id = st.session_state.selected_dashboard_id
                 
                 st.success("Changes applied successfully! Updated context is now active for new queries.")
                 logger.info("System context automatically reloaded after file save")
@@ -547,7 +608,7 @@ def main():
         if st.button("← Back to Chat"):
             st.session_state.show_context_editor = False
             st.rerun()
-        render_context_editor()
+        render_multi_context_editor()
     else:
         # Normal chat interface
         render_chat_interface()

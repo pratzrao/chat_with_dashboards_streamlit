@@ -11,6 +11,9 @@ Production-ready Streamlit application for conversational analytics powered by L
 - 📈 **Real-time data visualization** with automatic chart generation
 - 🔧 **Production deployment ready** with comprehensive error handling
 - 🔑 **Streamlit Cloud compatible** with SSH tunnel support
+- 📁 **Multi-context system** with organizational + dashboard-specific contexts
+- 🎯 **Dashboard-aware access control** restricts data access by current dashboard
+- 🔍 **Intelligent error handling** with cross-dashboard query suggestions
 
 ## Setup
 
@@ -81,17 +84,31 @@ The app will:
 ## Architecture
 
 ### Components
-- **Enhanced Tool Orchestrator** (`agents/enhanced_tool_orchestrator.py`): LLM + function calling for retrieval, dbt model search/lineage/details, schema snippets, distinct values, and guarded SQL with follow-up support.
-- **Enhanced Intent Router** (`agents/enhanced_router.py`): JSON intent classifier with conversation context; forces tool usage for data questions.
-- **Retrieval Layer** (`retrieval/enhanced_ingest.py`, `retrieval/vectorstore.py`): Ingests BHUMI charts/datasets/context/dbt docs into Chroma with a lightweight hash embedding.
+
+#### Core Orchestration
+- **Tool Orchestrator** (`agents/enhanced_tool_orchestrator.py`): Central engine managing LLM + function calling for retrieval, dbt model search/lineage/details, schema snippets, distinct values, and guarded SQL with follow-up support.
+- **Intent Router** (`agents/enhanced_router.py`): JSON intent classifier with conversation context; forces tool usage for data questions.
+
+#### Context & Access Control  
+- **Multi-Context System** (`retrieval/multi_context_loader.py`): Loads organizational context + dashboard-specific contexts dynamically.
+- **Dashboard Allowlist** (`retrieval/dashboard_allowlist.py`): Restricts table access based on current dashboard's charts and DBT upstream dependencies.
+- **Intelligent Error Detection** (`agents/dashboard_relevance_detector.py`): Analyzes failed queries and suggests relevant dashboards.
+
+#### Data & Retrieval
+- **Retrieval Layer** (`retrieval/enhanced_ingest.py`, `retrieval/vectorstore.py`): Ingests BHUMI charts/datasets/context/dbt docs into Chroma with semantic search.
 - **DBT Helpers** (`db/dbt_helpers.py`): Model lineage and schema information from dbt artifacts.
 - **SQL Safety** (`agents/sql_guard.py`): Read-only enforcement, forbidden keyword checks, LIMIT injection.
-- **UI Layer** (`app.py`): Streamlit chat with SQL/source expanders and retrieval toggle.
+
+#### User Interface
+- **UI Layer** (`app.py`): Streamlit chat with SQL/source expanders and dashboard selection.
+- **Multi-Context Editor** (`ui/multi_context_editor.py`): Tabbed interface for editing organizational and dashboard-specific contexts.
 
 ### Data Sources
-- **Dashboard Exports**: Organization dashboard/chart/dataset JSON/YAML metadata
-- **DBT Artifacts**: `manifest.json`, `catalog.json` for data lineage
-- **Human Context**: Organization-specific program documentation
+- **Dashboard Exports**: Organization dashboard/chart/dataset JSON/YAML metadata (`bhumi_context/dashboard_json/charts.json`)
+- **DBT Artifacts**: `manifest.json`, `catalog.json` for data lineage (`bhumi_context/bhumi_dbt/`)
+- **Multi-Context Files**: 
+  - Organizational context (`bhumi_context/org_context.md`)
+  - Dashboard-specific contexts (`bhumi_context/dashboard_contexts/*.md`) 
 - **Live Database**: Read-only PostgreSQL connection for data queries (allowed schemas: `prod`, `dev_prod`, `staging`, `intermediate`)
 
 ## Safety Features
@@ -100,33 +117,53 @@ The app will:
 - **Query Validation**: Blocks DDL/DML operations and multi-statement queries  
 - **PII Protection**: Detects and masks potential personally identifiable information
 - **Resource Limits**: Query timeouts, row limits, schema restrictions
+- **Dashboard Access Control**: Users only see tables relevant to current dashboard
+- **Comprehensive SQL Injection Prevention**: Validates CTEs, subqueries, dynamic SQL, and union operations
 - **Audit Logging**: All queries and responses logged with metadata
 
 ## File Structure
 
 ```
 dalgo_chat_dashboard/
-├── app.py                  # Main Streamlit application (enhanced stack)
+├── app.py                  # Main Streamlit application 
 ├── config.py               # Environment configuration
 ├── requirements.txt        # Python dependencies
-├── db/
-│   ├── dbt_helpers.py      # DBT model and lineage utilities
-│   └── postgres.py         # Database connection and execution
-├── retrieval/
-│   ├── enhanced_ingest.py  # Ingest BHUMI exports + context + dbt
-│   ├── ngo_context_loader.py
-│   ├── superset_parser.py
-│   └── vectorstore.py      # ChromaDB vector store management
 ├── agents/
-│   ├── enhanced_tool_orchestrator.py
-│   ├── enhanced_router.py
-│   ├── conversation_manager.py
-│   ├── sql_guard.py
-│   └── models.py
-├── prompts/                # System prompts for agents
-├── storage/                # Chroma DB persistence
-├── manual_testing.md       # Manual test script
-└── bhumi_context/          # Context, dbt artifacts, dashboard exports
+│   ├── enhanced_tool_orchestrator.py  # Central orchestration engine
+│   ├── enhanced_router.py              # Intent classification
+│   ├── dashboard_relevance_detector.py # Cross-dashboard error analysis
+│   ├── conversation_manager.py         # Chat history management
+│   ├── sql_guard.py                    # SQL safety validation
+│   └── models.py                       # Data structures
+├── retrieval/
+│   ├── multi_context_loader.py         # Multi-context system
+│   ├── dashboard_allowlist.py          # Dashboard access control
+│   ├── enhanced_ingest.py              # Document ingestion
+│   ├── vectorstore.py                  # ChromaDB management
+│   ├── ngo_context_loader.py           # Legacy context loader
+│   └── bhumi_parser.py                 # Dashboard/chart parsing
+├── ui/
+│   └── multi_context_editor.py         # Context editing interface
+├── db/
+│   ├── dbt_helpers.py                  # DBT model utilities
+│   ├── postgres.py                     # Database connection
+│   ├── ssh_tunnel.py                   # Secure connectivity
+│   └── chat_logger.py                  # Query audit logging
+├── prompts/                            # System prompts for agents
+├── storage/                            # Chroma DB persistence
+└── manual_testing.md                   # Manual test script
+
+bhumi_context/                          # Multi-context data
+├── org_context.md                      # Organizational context
+├── dashboard_contexts/                 # Dashboard-specific contexts
+│   ├── fellowship_school_app_25_26.md
+│   ├── cgi_donor_report.md
+│   └── fellowship_comparison.md
+├── dashboard_json/
+│   └── charts.json                     # Dashboard/chart definitions
+└── bhumi_dbt/                          # DBT artifacts
+    ├── manifest.json
+    └── catalog.json
 ```
 
 ## Deployment
